@@ -5,10 +5,12 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
+import { controllers } from './controllers';
 
-
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+// Instantiating controllers
+const myAdsController = new controllers.MyAds();
+const loginController = new controllers.Login();
+const adsController = new controllers.Ads();
 
 const app = express();
 
@@ -20,8 +22,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+
+//---------------------- API routes ---------------------------
+
+// Login
+app.get('/api/v1/login', loginController.index)
+
+// Ads
+app.get('/api/v1/ads', adsController.index)
+
+// MyAds
+app.get('/api/v1/myAds', myAdsController.index)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
