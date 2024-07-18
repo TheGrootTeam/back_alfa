@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var app = require('../dist/app').default;
-var debug = require('debug')('back-alfa:server');
-var http = require('http');
+import app from '../app';
+import debugModule from 'debug';
+import http from 'http';
+
+const debug = debugModule('back-alfa:server');
 
 /**
  * Get port from environment and store in Express.
@@ -33,7 +35,7 @@ server.on('listening', onListening);
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort(val) {
+function normalizePort(val:string) {
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
@@ -53,7 +55,7 @@ function normalizePort(val) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError(error) {
+function onError(error:NodeJS.ErrnoException): void {
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -81,10 +83,12 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
-  debug('Listening on ' + bind);
+function onListening(): void {
+  const addr = server.address();
+  if (addr !== null && typeof addr !== 'string') {
+    const bind = 'port ' + addr.port;
+    debug('Listening on ' + bind);
+  } else {
+    debug('Listening on pipe ' + addr);
+  }
 }
