@@ -4,9 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-/* GET home page. */
-router.get('/', function (req, res, next) {
-    res.send('Hola Mundo!!!');
-});
-exports.default = router;
+const controllers_1 = require("../controllers");
+const api = express_1.default.Router();
+// --------------- Instantiating controllers ------------------
+const myAdsController = new controllers_1.controllers.MyAds();
+const loginController = new controllers_1.controllers.Login();
+const adsController = new controllers_1.controllers.Ads();
+// Login
+api.get('/login', loginController.index);
+// Ads
+api.get('/ads', adsController.index);
+// MyAds
+api.get('/myAds', myAdsController.index);
+exports.default = api;
