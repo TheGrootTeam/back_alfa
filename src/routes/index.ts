@@ -1,9 +1,20 @@
 import express from'express';
-const router = express.Router();
+import { controllers } from '../controllers';
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.send('Hola Mundo!!!');
-});
+const api = express.Router();
 
-export default router;
+// --------------- Instantiating controllers ------------------
+const myAdsController = new controllers.MyAds();
+const loginController = new controllers.Login();
+const adsController = new controllers.Ads();
+
+// Login
+api.get('/login', loginController.index)
+
+// Ads
+api.get('/ads', adsController.index)
+
+// MyAds
+api.get('/myAds', myAdsController.index)
+
+export default api;
