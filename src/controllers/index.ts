@@ -3,7 +3,7 @@ import LoginController from './LoginController';
 import MyAdsController from './MyAdsController';
 
 export const controllers = {
-    MyAds: MyAdsController,
-    Login: LoginController, 
-    Ads:AdsController
+  MyAds: MyAdsController,
+  Login: LoginController,
+  Ads: AdsController,
 };
