@@ -9,12 +9,12 @@ const loginController = new controllers.Login();
 const adsController = new controllers.Ads();
 
 // Login
-api.get('/login', loginController.index)
+api.get('/login', loginController.index);
 
 // Ads
-api.get('/ads', adsController.index)
+api.get('/ads', adsController.index);
 
 // MyAds
-api.get('/myAds', myAdsController.index)
+api.get('/myAds', myAdsController.index);
 
 export default api;

@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
 export default class AdsController {
-    index(req: Request, res:Response, next:NextFunction) {
-        res.json({message: "Hola mundo desde AdsController!"})
+    index(_req: Request, res:Response, _next:NextFunction) {
+        res.json({message: 'Hola mundo desde AdsController!'});
     }
 }
