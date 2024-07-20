@@ -1,5 +1,16 @@
 # 💻 Proyecto Alfa - BackEnd
 
+## Scripts
+
+- `npm start:` ejecuta la aplicación en modo producción
+- `npm run dev:` inicia en modo desarrollo con compilación en tiempo real.
+- `npm run build:` compila el código TS a JS con previa eliminación del directorio **dist/** para evitar posibles problemas.
+- `npm run test:` ejecuta los tests
+- `npm run test:watch:` ejecuta los test de forma continua, monitoreando los cambios en el código en tiempo real.
+- `npm run lint:` analiza el código
+- `npm run lint:fix:`lo analiza y corriga los errores
+- `npm run format:` formatea con Prettier todos los documentos dentro del directorio src/
+
 ## Tecnologías utilizadas
 
 _\* in progress, se irá actualizando_
