@@ -1,4 +1,3 @@
-
 export const prueba = () => {
-    return 'Prueba test'
-}
+  return 'Prueba test';
+};
