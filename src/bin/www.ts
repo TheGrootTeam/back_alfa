@@ -9,6 +9,7 @@ import debugModule from 'debug';
 import http from 'http';
 
 const debug = debugModule('back-alfa:server');
+debug.enabled = true;
 
 /**
  * Get port from environment and store in Express.

@@ -25,7 +25,7 @@
     "swagger-ui-express": "^5.0.1"
   },
   "description": "",
-  "main": "dist/app.js",
+  "main": "dist/bin/www.js",
   "author": "",
   "license": "ISC",
   "devDependencies": {
