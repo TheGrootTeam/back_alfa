@@ -8,6 +8,7 @@ import { HttpError } from 'http-errors';
 import apiRoutes from './routes';
 
 const app = express();
+const apiVersion = process.env.API_VERSION;
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -16,7 +17,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //---------------------- API routes ---------------------------
-app.use('/api/v1', apiRoutes);
+app.use(`/api/${apiVersion}`, apiRoutes);
 
 // ----------- catch 404 and forward to error handler -----------
 app.use(function (_req, _res, next) {
