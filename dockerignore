@@ -1,0 +1,37 @@
+node_modules
+.gitignore
+**/.git
+**/.DS_Store
+**/node_modules
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Virtual environment
+.env
+.venv/
+venv/
+
+# VS Code
+.vscode/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Distribution / packaging
+env/
+build/
+dist/
+
+# Docker
+docker-compose.yml
+Dockerfile
+.docker
+.dockerignore
