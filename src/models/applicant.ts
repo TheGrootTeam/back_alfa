@@ -1,7 +1,7 @@
 //const mongoose = require('mongoose');
 import mongoose from 'mongoose';
 
-//Esquema para empresas de la BBDD
+//Esquema para empresas de la BBDD 
 
 //const applicantSchema = mongoose.Schema({
   const applicantSchema = new mongoose.Schema({

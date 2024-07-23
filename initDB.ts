@@ -16,7 +16,7 @@ async function main() {
   //Creo una promesa para esperar  a la realización de la conexión
   await new Promise((resolve) => connection.once('open', resolve));
 
-  // Avisamos del borrado inicial antes ejecutar la inicialización:
+  // Avisamos del borrado inicial antes ejecutar la inicialización: 
   console.log("\n ================================= ");
   console.log(" ==== Inicialización de la BD ==== ");
   console.log(" ================================= \n");
