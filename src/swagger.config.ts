@@ -9,5 +9,5 @@ export const swaggerOptions: SwaggerOptions = {
       description: 'API Alfa build in NodeJS with Typescript'
     }
   },
-  apis: ['./src/routes/index.ts']
+  apis: ['./src/routes/*.ts']
 };
