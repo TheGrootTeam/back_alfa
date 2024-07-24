@@ -4,7 +4,7 @@
 import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
-//Esquema para empresas de la BBDD
+//Esquema para empresas de la BBDD 
 
 //const internshipPositionSchema = mongoose.Schema({
   const internshipPositionSchema = new mongoose.Schema({
