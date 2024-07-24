@@ -10,11 +10,12 @@
     "test:watch": "jest --watchAll",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write src/**/*.ts"
+    "format": "prettier --write src/**/*.ts",
     "tsc": "tsc",
     "initDB": "ts-node initDB.ts"
   },
   "dependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/mongodb": "^4.0.7",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -22,6 +23,7 @@
     "express": "^4.19.2",
     "http-errors": "~1.6.3",
     "jade": "^0.29.0",
+    "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "morgan": "~1.9.1",
