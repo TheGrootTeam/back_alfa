@@ -1,17 +1,18 @@
 //const mongoose = require('mongoose');
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 //Esquema para empresas de la BBDD
 
-//const applicantSchema = mongoose.Schema({
-  const applicantSchema = new mongoose.Schema({
-  dni: {type: String, required: true},
+const applicantSchema = new mongoose.Schema({
+  dniCif: {type: String, required: true},
+  password: {type: String, required: true}, //aplicar hash
   name: {type: String, required: true},
-  //Comentados para borrador
-  // mail: {type: String, required: true},  // falta verificación de forma
-  // //phone ??
-  // photo: {type: String, required: false},
-  // experience : [{
+  mail: {type: String, required: true},  // falta verificación de forma
+  phone: {type: String, required: true},
+  photo: {type: String, required: false}, //url a imagen
+  cv: {type: String, required: true}, //url a documento
+  //Alternativa a cv
+  // cv : [{
   //   company_name: {type: String, required: true},
   //   start_date: {type: Date, required: true},
   //   end_date: {type: Date, required: true},
@@ -19,12 +20,22 @@ import mongoose from 'mongoose';
   //   job: {type: Boolean, required: true}, //experiencia laboral o académica
   //   description: {type: String, required: false},
   // }],
-  // ubication: {type: String, required: false},
-  // geographically_mobile: {type: Boolean, required: true},
-  // disponibility: {type: Boolean, required: true},
-  // preferredOffers: {type: Array, required: false}, //_id o embebido ?
-  // suscribedOffers: {type: Array, required: false}, //_id o embebido ?
-
+  ubication: {type: String, required: false},
+  role: {type: String, required: true}, //presencial - teletrabajo - hibrido
+  typeJob: {type: String, required: true}, //renumerado, no renumerado, voluntariado
+  wantedJob: {type: String, required: true}, //puesto preferido que se busca
+  geographically_mobile: {type: Boolean, required: true},
+  disponibility: {type: Boolean, required: true},
+  preferredOffers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'InternshipOffer',
+    required: false
+  }],
+  suscribedOffers: [{
+    type: Schema.Types.ObjectId,
+    ref: 'InternshipOffer',
+    required: false
+  }] 
 });
 
 const Applicant = mongoose.model('Applicant', applicantSchema);

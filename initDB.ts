@@ -5,7 +5,8 @@ dotenv.config();
 import connection from './src/lib/connectMongoose';
 import Company from './src/models/company';
 import Applicant from './src/models/applicant';
-import InternshipPosition from './src/models/internshipPosition';
+import InternshipOffer from './src/models/internshipOffer';
+import User from "./src/models/user";
 const readLinea = require('node:readline');  //¿Intercambiable?
 
 main().catch(err => console.log('Se ha producido un error: ', err));
@@ -29,7 +30,8 @@ async function main() {
 
   await initCompanies();
   await initApplicants();
-  await initInternship();
+  await initInternships();
+  await initUsers();
   connection.close();
 }
 
@@ -38,12 +40,28 @@ const initCompanies = async () => {
   const deleted = await Company.deleteMany();
   console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} empresas de la BD ${connection.name}.`)
 
-  console.log("BALIZA 1")
-  
   // crear empresas iniciales
   const initialCompanies = await Company.insertMany([
-    { cif: "666", name: "Appol"},
-    { cif: "555", name: "Guguel"},
+    { dniCif: "A000666",
+      password: "123", 
+      name: "Apple",
+      mail: "apple@mail.es",
+      phone: "000000000",
+      sector: "Avaricia y Telecomunicaciones",
+      ubication: "Hell",
+      description: "Vendemos lo mismo que otros pero más chic y, por tanto, más caro",
+      publishedOffers: []
+    },
+    { dniCif: "G000666",
+      password: "123", 
+      name: "Google",
+      mail: "google@mail.es",
+      phone: "000000000",
+      sector: "Tecnológicas",
+      ubication: "EEUU",
+      description: "La tecnología a tu alcance a cambio de tus datos (y algo de tu alma)",
+      publishedOffers: []
+    },
   ])
   console.log(`··· Creados ${initialCompanies.length} empresas nuevas.`)
 }
@@ -52,33 +70,106 @@ const initApplicants = async () => {
   const deleted = await Applicant.deleteMany();
   console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} aspirantes de la BD ${connection.name}.`)
 
-  console.log("BALIZA 2")
 
   // crear aspirantes iniciales
   const initialApplicants = await Applicant.insertMany([
-    { dni: "000000000A", name: "Antonio" },
-    { dni: "111111111B", name: "Anais" },
-    { dni: "101010101C", name: "Aitor" },
+    { dniCif: "000000000A", 
+      name: "Antonio", 
+      password: "123", 
+      mail: "antonio@mail.es",
+      phone: "000000001",
+      photo: "url-foto",
+      cv: "url-cv",
+      ubication: "Madrid",
+      role: "presencial",
+      typeJob: "renumerado",
+      wantedJob: "lo que sea",
+      geographically_mobile: false,
+      disponibility: true,
+      preferredOffers: [],
+      suscribedOffers:[]
+    },
+    { dniCif: "000000001A", 
+      name: "Ana", 
+      password: "123", 
+      mail: "ana@mail.es",
+      phone: "000000001",
+      photo: "url-foto",
+      cv: "url-cv",
+      ubication: "Madrid",
+      role: "presencial",
+      typeJob: "renumerado",
+      wantedJob: "encender ordenadores",
+      geographically_mobile: false,
+      disponibility: true,
+      preferredOffers: [],
+      suscribedOffers:[]
+    },
+    
   ])
   console.log(`··· Creados ${initialApplicants.length} aspirantes nuevos.`)
 }
 
-const initInternship = async () => {
-  const deleted = await InternshipPosition.deleteMany();
+const initInternships = async () => {
+  const deleted = await InternshipOffer.deleteMany();
   console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} ofertas de la BD ${connection.name}.`)
 
-  console.log("BALIZA 3")
-
   // crear aspirantes iniciales
-  const initialInternship = await InternshipPosition.insertMany([
-    { tittle: "Puesto becario para traer café", publicationDate: "2024-06-01"},
-    { tittle: "Puesto cholalzo. Proyecto interesante y gastos cubiertos", publicationDate: "2024-06-10"},
-    { tittle: "Oferta en estudio. Vienes de prueba 2 días y luego ya, si eso, miramos si seguimos", publicationDate: "2024-06-11"},
+  const initialInternship = await InternshipOffer.insertMany([
+    { tittle: "Puesto becario para traer café", 
+      publicationDate: "2024-06-01",
+      description: "hacer cafeses, chocolates e infusiones",
+      //company:,
+      status: true,
+      numberVacancies: 1,
+      // listAspirings:,
+      numberAspirings: 1
+    },
+    { tittle: "Puesto Chollazo", 
+      publicationDate: "2024-06-01",
+      description: "Proyecto interesante y gastos cubiertos",
+      //company:,
+      status: true,
+      numberVacancies: 1,
+      // listAspirings:,
+      numberAspirings: 1
+    },
+    
     
   ])
-  console.log(`¬¬¬ Creados ${initialInternship.length} ofertas nuevas.`)
+  console.log(`··· Creados ${initialInternship.length} ofertas nuevas.`)
 }
 
+const initUsers = async () => {
+  const deleted = await User.deleteMany();
+  console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} datos de acceso de la BD ${connection.name}.`)
+
+  // crear datos de acceso iniciales
+  const initialUser = await User.insertMany([
+    { dniCif: "A000666",
+      password: "123", 
+      enterprise: true,
+      mail: "apple@mail.es",
+    },
+    { dniCif: "G000666",
+      password: "123", 
+      enterprise: true,
+      mail: "google@mail.es",
+    },
+    { dniCif: "000000000A", 
+      password: "123", 
+      enterprise: false,
+      mail: "antonio@mail.es",
+    },
+    { dniCif: "000000001A", 
+      password: "123", 
+      enterprise: false,
+      mail: "ana@mail.es",
+    }
+  ]);
+
+  console.log(`··· Creados ${initialUser.length} datos de acceso nuevos.`)
+}
   
 function fConfirmation(texto: string) {
   return new Promise((resolve, reject) => {

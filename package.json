@@ -10,8 +10,7 @@
     "test:watch": "jest --watchAll",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --write src/**/*.ts"
-    "tsc": "tsc",
+    "format": "prettier --write src/**/*.ts",
     "initDB": "ts-node initDB.ts"
   },
   "dependencies": {
