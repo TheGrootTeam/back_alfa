@@ -1,14 +1,14 @@
-import { User } from '../models/user';
+import User from '../models/user';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
 export default class LoginController {
-  index(_req: Request, res: Response, _next: NextFunction) {
-    res.json({ token: 'Token desde LoginController!' });
-  }
+  // index(_req: Request, res: Response, _next: NextFunction) {
+  //   res.json({ token: 'Token desde LoginController!' });
+  // }
   async post(req: Request, res: Response, next: NextFunction) {
     try {
-      const { dnicif, password } = req.body;
+      const { dnicif, password} = req.body;
       // find user in db
       const user = await User.findOne({ dnicif: dnicif }).exec();
 

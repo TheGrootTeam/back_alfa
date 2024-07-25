@@ -8,7 +8,7 @@ const applicantSchema = new mongoose.Schema({
   dniCif: {type: String, required: true},
   password: {type: String, required: true}, //aplicar hash
   name: {type: String, required: true},
-  mail: {type: String, required: true},  // falta verificación de forma
+  email: {type: String, required: true},  // falta verificación de forma
   phone: {type: String, required: true},
   photo: {type: String, required: false}, //url a imagen
   cv: {type: String, required: true}, //url a documento
