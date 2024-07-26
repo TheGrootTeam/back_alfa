@@ -5,7 +5,7 @@ import mongoose, {Schema} from 'mongoose';
 
 //Esquema para empresas de la BBDD
 
-const internshipOfferSchema = new mongoose.Schema({
+const OfferSchema = new mongoose.Schema({
   tittle: {type: String, required: true},
   publicationDate: {type: Date, required: true},  
   description: {type: String, required: true},
@@ -24,8 +24,8 @@ const internshipOfferSchema = new mongoose.Schema({
   numberAspirings: {type: Number, required: false}
 });
 
-const InternshipOffer = mongoose.model('InternshipOffer', internshipOfferSchema);
+const Offer = mongoose.model('Offer', OfferSchema);
 
 //module.exports = InternshipPosition;
-export default InternshipOffer;
+export default Offer;
 

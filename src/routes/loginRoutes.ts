@@ -59,6 +59,6 @@ const loginRoutes = express.Router();
  *
  */
 
-loginRoutes.get('/', loginController.index);
+loginRoutes.post('/', loginController.post);
 
 export default loginRoutes;

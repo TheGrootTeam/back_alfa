@@ -1,4 +1,4 @@
-import User from '../models/user';
+import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
@@ -8,9 +8,9 @@ export default class LoginController {
   // }
   async post(req: Request, res: Response, next: NextFunction) {
     try {
-      const { dnicif, password} = req.body;
+      const { dniCif, password } = req.body;
       // find user in db
-      const user = await User.findOne({ dnicif: dnicif }).exec();
+      const user = await User.findOne({ dnicif: dniCif }).exec();
 
       // throw error if don't find the user
       if (!user || !(await user.comparePassword(password))) {

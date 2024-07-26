@@ -1,0 +1,24 @@
+[
+  {
+    "dniCif": "A000666",
+    "password": "123",
+    "name": "Apple",
+    "mail": "apple@mail.es",
+    "phone": "000000000",
+    "sector": "Avaricia y Telecomunicaciones",
+    "ubication": "Hell",
+    "description": "Vendemos lo mismo que otros pero más chic y, por tanto, más caro",
+    "publishedOffers": []
+  },
+  {
+    "dniCif": "G000666",
+    "password": "123",
+    "name": "Google",
+    "mail": "google@mail.es",
+    "phone": "000000000",
+    "sector": "Tecnológicas",
+    "ubication": "EEUU",
+    "description": "La tecnología a tu alcance a cambio de tus datos (y algo de tu alma)",
+    "publishedOffers": []
+  }
+]
