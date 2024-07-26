@@ -10,10 +10,9 @@ export default class LoginController {
     try {
       const { dniCif, password } = req.body;
       // find user in db
-      const user = await User.findOne({ dnicif: dniCif }).exec();
-
+      const user = await User.findOne({ dniCif: dniCif }).exec();
       // throw error if don't find the user
-      if (!user || !(await user.comparePassword(password))) {
+      if (!user || !user.comparePassword(password)) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }

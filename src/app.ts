@@ -7,6 +7,9 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
 import apiRoutes from './routes';
 
+// Execute module to connect db
+import './lib/connectMongoose';
+
 const app = express();
 const apiVersion = process.env.API_VERSION;
 

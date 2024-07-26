@@ -4,7 +4,7 @@ import { IUser, IUserModel } from '../interfaces/IUser';
 
 //set user schema
 const userSchema = new mongoose.Schema<IUser>({
-  dniCif: { type: String, required: true },
+  dniCif: { type: String, required: true, index: true },
   password: { type: String, required: true },
   isCompany: { type: Boolean, required: true }, //true: company - false: applicant
   email: { type: String, required: true }
@@ -22,8 +22,9 @@ userSchema.statics.hashPassword = function (password: string): Promise<string> {
 };
 
 //verify password
-userSchema.methods.comparePassword = function (password: string): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
+userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+  const isvalid = await bcrypt.compare(password, this.password);
+  return isvalid;
 };
 
 // create user model and export
