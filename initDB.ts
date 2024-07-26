@@ -1,186 +1,96 @@
-//acceso a las variables de entorno de .env
-//require('dotenv').config();
+'use strict';
+
+//import env variables
 import dotenv from 'dotenv';
 dotenv.config();
+
+//connect to db
 import connection from './src/lib/connectMongoose';
-import Company from './src/models/company';
-import Applicant from './src/models/applicant';
-import InternshipOffer from './src/models/internshipOffer';
-import User from "./src/models/user";
-const readLinea = require('node:readline');  //¿Intercambiable?
+//import models
+import models from './src/models/index';
+const { Company, Offer, User, Applicant } = models;
+//library to add a security question
+import readLinea from 'node:readline';
+//import json examples
+import examples from './src/exampleDBjson/index';
+const { exUsers, exOffers, exCompanies, exApplicants } = examples;
 
-main().catch(err => console.log('Se ha producido un error: ', err));
-
+main().catch((err) => console.log('Error in initDB: ', err));
 
 async function main() {
-
-  //Creo una promesa para esperar  a la realización de la conexión
+  //to wait until we are connected to db
   await new Promise((resolve) => connection.once('open', resolve));
 
-  // Avisamos del borrado inicial antes ejecutar la inicialización:
-  console.log("\n ================================= ");
-  console.log(" ==== Inicialización de la BD ==== ");
-  console.log(" ================================= \n");
-  console.log(" >>> Atención: Se fomateará la BD y se introducirán los datos iniciales mínimos.");
-  const borrar = await fConfirmation(" >>> El contenido anterior de la BDs será borrado. Introduce 's' si deseas continuar... ");
-  if (!borrar){
-      console.log ("Inicialización abortada");
-      process.exit();
+  //ask question to add security on delete all db
+  const deletedb = await fConfirmation(
+    `WARNING! You are going to delete all content\nThis action cannot be undone\nAre you sure you want to delete all database content?\nPress ENTER to cancel or YES to confirm: `
+  );
+
+  if (!deletedb) {
+    console.log('Canceled');
+    process.exit();
   }
 
   await initCompanies();
   await initApplicants();
-  await initInternships();
+  await initOffers();
   await initUsers();
+
   connection.close();
 }
 
-
 const initCompanies = async () => {
+  // delete all companies data
   const deleted = await Company.deleteMany();
-  console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} empresas de la BD ${connection.name}.`)
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} companies from BD ${connection.name}.`);
 
-  // crear empresas iniciales
-  const initialCompanies = await Company.insertMany([
-    { dniCif: "A000666",
-      password: "123", 
-      name: "Apple",
-      mail: "apple@mail.es",
-      phone: "000000000",
-      sector: "Avaricia y Telecomunicaciones",
-      ubication: "Hell",
-      description: "Vendemos lo mismo que otros pero más chic y, por tanto, más caro",
-      publishedOffers: []
-    },
-    { dniCif: "G000666",
-      password: "123", 
-      name: "Google",
-      mail: "google@mail.es",
-      phone: "000000000",
-      sector: "Tecnológicas",
-      ubication: "EEUU",
-      description: "La tecnología a tu alcance a cambio de tus datos (y algo de tu alma)",
-      publishedOffers: []
-    },
-  ])
-  console.log(`··· Creados ${initialCompanies.length} empresas nuevas.`)
-}
+  // create companies examples
+  const initialCompanies = await Company.insertMany(exCompanies);
+  console.log(`··· Created ${initialCompanies.length} new companies.`);
+};
 
 const initApplicants = async () => {
+  //delete all applicants data
   const deleted = await Applicant.deleteMany();
-  console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} aspirantes de la BD ${connection.name}.`)
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} applicants form BD ${connection.name}.`);
 
+  // create applicants examples
+  const initialApplicants = await Applicant.insertMany(exApplicants);
+  console.log(`··· Created ${initialApplicants.length} new applicants.`);
+};
 
-  // crear aspirantes iniciales
-  const initialApplicants = await Applicant.insertMany([
-    { dniCif: "000000000A", 
-      name: "Antonio", 
-      password: "123", 
-      mail: "antonio@mail.es",
-      phone: "000000001",
-      photo: "url-foto",
-      cv: "url-cv",
-      ubication: "Madrid",
-      role: "presencial",
-      typeJob: "renumerado",
-      wantedJob: "lo que sea",
-      geographically_mobile: false,
-      disponibility: true,
-      preferredOffers: [],
-      suscribedOffers:[]
-    },
-    { dniCif: "000000001A", 
-      name: "Ana", 
-      password: "123", 
-      mail: "ana@mail.es",
-      phone: "000000001",
-      photo: "url-foto",
-      cv: "url-cv",
-      ubication: "Madrid",
-      role: "presencial",
-      typeJob: "renumerado",
-      wantedJob: "encender ordenadores",
-      geographically_mobile: false,
-      disponibility: true,
-      preferredOffers: [],
-      suscribedOffers:[]
-    },
-    
-  ])
-  console.log(`··· Creados ${initialApplicants.length} aspirantes nuevos.`)
-}
-
-const initInternships = async () => {
-  const deleted = await InternshipOffer.deleteMany();
-  console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} ofertas de la BD ${connection.name}.`)
-
-  // crear aspirantes iniciales
-  const initialInternship = await InternshipOffer.insertMany([
-    { tittle: "Puesto becario para traer café", 
-      publicationDate: "2024-06-01",
-      description: "hacer cafeses, chocolates e infusiones",
-      //company:,
-      status: true,
-      numberVacancies: 1,
-      // listAspirings:,
-      numberAspirings: 1
-    },
-    { tittle: "Puesto Chollazo", 
-      publicationDate: "2024-06-01",
-      description: "Proyecto interesante y gastos cubiertos",
-      //company:,
-      status: true,
-      numberVacancies: 1,
-      // listAspirings:,
-      numberAspirings: 1
-    },
-    
-    
-  ])
-  console.log(`··· Creados ${initialInternship.length} ofertas nuevas.`)
-}
 
 const initUsers = async () => {
+  // delete all users data
   const deleted = await User.deleteMany();
-  console.log(`¬¬¬ Se han eliminado ${deleted.deletedCount} datos de acceso de la BD ${connection.name}.`)
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} users from BD ${connection.name}.`);
 
-  // crear datos de acceso iniciales
-  const initialUser = await User.insertMany([
-    { dniCif: "A000666",
-      password: "123", 
-      enterprise: true,
-      mail: "apple@mail.es",
-    },
-    { dniCif: "G000666",
-      password: "123", 
-      enterprise: true,
-      mail: "google@mail.es",
-    },
-    { dniCif: "000000000A", 
-      password: "123", 
-      enterprise: false,
-      mail: "antonio@mail.es",
-    },
-    { dniCif: "000000001A", 
-      password: "123", 
-      enterprise: false,
-      mail: "ana@mail.es",
-    }
-  ]);
+  // create users examples
+  const initialUser = await User.insertMany(exUsers);
 
-  console.log(`··· Creados ${initialUser.length} datos de acceso nuevos.`)
-}
-  
-function fConfirmation(texto: string) {
-  return new Promise((resolve, reject) => {
-    // conectamos la consola con el módulo readline 
+  console.log(`··· Created ${initialUser.length} new users.`);
+};
+
+const initOffers = async () => {
+  // delete all offers data
+const deleted = await Offer.deleteMany();
+console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
+
+// crear offers examples
+const initialOffers = await Offer.insertMany(exOffers);
+console.log(`··· Created ${initialOffers.length} new offers.`);
+};
+
+function fConfirmation(text: string) {
+  return new Promise((resolve, _reject) => {
+    // connect readlinne
     const ifc = readLinea.createInterface({
       input: process.stdin,
       output: process.stdout
     });
-    ifc.question(texto, (respuesta: string) => {
+    ifc.question(text, (response: string) => {
       ifc.close();
-      resolve(respuesta.toLowerCase() === 's');
-    })
+      resolve(response.toLowerCase() === 'yes');
+    });
   });
 }

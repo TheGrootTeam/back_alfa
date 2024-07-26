@@ -15,7 +15,7 @@ const companySchema = new mongoose.Schema({
   description: {type: String, required: true},
   publishedOffers: [{
     type: Schema.Types.ObjectId,
-    ref: 'InternshipOffer',
+    ref: 'Offer',
     required: false
   }]
 });

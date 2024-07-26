@@ -29,12 +29,12 @@ const applicantSchema = new mongoose.Schema({
   disponibility: {type: Boolean, required: true},
   preferredOffers: [{
     type: Schema.Types.ObjectId,
-    ref: 'InternshipOffer',
+    ref: 'Offer',
     required: false
   }],
   suscribedOffers: [{
     type: Schema.Types.ObjectId,
-    ref: 'InternshipOffer',
+    ref: 'Offer',
     required: false
   }] 
 });
