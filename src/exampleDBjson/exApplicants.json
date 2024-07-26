@@ -1,9 +1,9 @@
 [
   {
     "dniCif": "000000000A",
-    "name": "Antonio",
     "password": "123",
-    "mail": "antonio@mail.es",
+    "name": "Antonio",
+    "email": "antonio@mail.es",
     "phone": "000000001",
     "photo": "url-foto",
     "cv": "url-cv",
@@ -18,9 +18,9 @@
   },
   {
     "dniCif": "000000001A",
-    "name": "Ana",
     "password": "123",
-    "mail": "ana@mail.es",
+    "name": "Ana",
+    "email": "ana@mail.es",
     "phone": "000000001",
     "photo": "url-foto",
     "cv": "url-cv",

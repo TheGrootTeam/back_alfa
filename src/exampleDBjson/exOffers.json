@@ -1,22 +1,22 @@
 [
   {
-    "tittle": "Puesto becario para traer café",
+    "position": "Puesto becario para traer café",
     "publicationDate": "2024-06-01",
     "description": "hacer cafeses, chocolates e infusiones",
-    "company": "company",
+    "companyOwner": "company",
     "status": true,
     "numberVacancies": 1,
-    "listAspirings":"listAspirings",
-    "numberAspirings": 1
+    "listApplicants":"listApplicants",
+    "numberApplicants": 1
   },
   {
     "tittle": "Puesto Chollazo",
     "publicationDate": "2024-06-01",
     "description": "Proyecto interesante y gastos cubiertos",
-    "company": "company",
+    "companyOwner": "company",
     "status": true,
     "numberVacancies": 1,
-    "listAspirings":"listAspirings",
-    "numberAspirings": 1
+    "listApplicants":"listApplicants",
+    "numberApplicants": 1
   }
 ]

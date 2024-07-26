@@ -12,7 +12,7 @@ const { Company, Offer, User, Applicant } = models;
 //library to add a security question
 import readLinea from 'node:readline';
 //import json examples
-import examples from './src/exampleDBjson/index' assert { type: 'json' };
+import examples from './src/exampleDBjson/index';
 const { exUsers, exOffers, exCompanies, exApplicants } = examples;
 
 main().catch((err) => console.log('Error in initDB: ', err));
@@ -89,7 +89,7 @@ function fConfirmation(text: string) {
     });
     ifc.question(text, (response: string) => {
       ifc.close();
-      resolve(response.toLowerCase() === 'y');
+      resolve(response.toLowerCase() === 'yes');
     });
   });
 }

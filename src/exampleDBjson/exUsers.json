@@ -1,6 +1,6 @@
 [
-  { "dniCif": "A000666", "password": "123", "enterprise": true, "mail": "apple@mail.es" },
-  { "dniCif": "G000666", "password": "123", "enterprise": true, "mail": "google@mail.es" },
-  { "dniCif": "000000000A", "password": "123", "enterprise": false, "mail": "antonio@mail.es" },
-  { "dniCif": "000000001A", "password": "123", "enterprise": false, "mail": "ana@mail.es" }
+  { "dniCif": "A000666", "password": "123", "isCompany": true, "email": "apple@mail.es" },
+  { "dniCif": "G000666", "password": "123", "isCompany": true, "email": "google@mail.es" },
+  { "dniCif": "000000000A", "password": "123", "isCompany": false, "email": "antonio@mail.es" },
+  { "dniCif": "000000001A", "password": "123", "isCompany": false, "email": "ana@mail.es" }
 ]
