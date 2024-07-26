@@ -59,15 +59,6 @@ const initApplicants = async () => {
   console.log(`··· Created ${initialApplicants.length} new applicants.`);
 };
 
-const initOffers = async () => {
-    // delete all offers data
-  const deleted = await Offer.deleteMany();
-  console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
-
-  // crear offers examples
-  const initialOffers = await Offer.insertMany(exOffers);
-  console.log(`··· Created ${initialOffers.length} new offers.`);
-};
 
 const initUsers = async () => {
   // delete all users data
@@ -78,6 +69,16 @@ const initUsers = async () => {
   const initialUser = await User.insertMany(exUsers);
 
   console.log(`··· Created ${initialUser.length} new users.`);
+};
+
+const initOffers = async () => {
+  // delete all offers data
+const deleted = await Offer.deleteMany();
+console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
+
+// crear offers examples
+const initialOffers = await Offer.insertMany(exOffers);
+console.log(`··· Created ${initialOffers.length} new offers.`);
 };
 
 function fConfirmation(text: string) {

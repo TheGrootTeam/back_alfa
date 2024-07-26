@@ -9,13 +9,13 @@ const OfferSchema = new mongoose.Schema({
   position: { type: String, required: true },
   publicationDate: { type: Date, required: true },
   description: { type: String, required: true },
-  companyOwner: [
+  companyOwner: 
     {
       type: Schema.Types.ObjectId,
       ref: 'Company',
       required: false
     }
-  ],
+  ,
   status: { type: Boolean, required: true }, //abierta o cerrada
   numberVacancies: { type: Number, required: true },
   listApplicants: [
