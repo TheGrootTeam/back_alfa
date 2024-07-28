@@ -1,18 +1,32 @@
-import User from '../models/User';
+import Applicant from '../models/Applicant';
+import Company from '../models/Company';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { debug } from 'console'
+import {comparePassword, hashPassword } from '../lib/utils';
 
 export default class LoginController {
+  
   // index(_req: Request, res: Response, _next: NextFunction) {
   //   res.json({ token: 'Token desde LoginController!' });
   // }
   async post(req: Request, res: Response, next: NextFunction) {
+    
     try {
       const { dniCif, password } = req.body;
-      // find user in db
-      const user = await User.findOne({ dniCif: dniCif }).exec();
+      
+      // find user in Applicants and Companies collections
+      
+      const userApplicant = await Applicant.findOne({ dniCif: dniCif }).exec();
+      const userCompany = await Company.findOne({ dniCif: dniCif }).exec();
+      
+      const user = userApplicant? userApplicant : userCompany;
+  
+      //@ts-ignore
+      console.log ("HASH: ", await hashPassword(user.password));
+
       // throw error if don't find the user
-      if (!user || !user.comparePassword(password)) {
+      if (!user || !(comparePassword(password, user.password))) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
