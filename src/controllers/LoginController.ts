@@ -1,11 +1,48 @@
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
+import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { debug } from 'console'
 import {comparePassword, hashPassword } from '../lib/utils';
 
 export default class LoginController {
+
+  async register(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { dniCif, password, isCompany, email } = req.body;
+
+      // validateFields
+      if (!dniCif || !password || isCompany === undefined || !email) {
+        res.status(400).json({ message: 'All fields are required' });
+        return;
+      }
+
+      // Verify if the user already exists
+      const userExists = await User.findOne({ email });
+      if (userExists) {
+        res.status(400).json({ message: 'User already exists' });
+        return;
+      }
+
+      // Password hash
+      const hashedPassword = await hashPassword(password);
+
+      // Create new user
+      const user = new User({
+        dniCif,
+        password: hashedPassword,
+        isCompany,
+        email,
+      });
+
+      await user.save();
+
+      res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
   
   // index(_req: Request, res: Response, _next: NextFunction) {
   //   res.json({ token: 'Token desde LoginController!' });
