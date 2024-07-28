@@ -1,9 +1,6 @@
-//internshipPosition
 
 //const mongoose = require('mongoose');
 import mongoose, { Schema } from 'mongoose';
-
-//Esquema para empresas de la BBDD
 
 const OfferSchema = new mongoose.Schema({
   position: { type: String, required: true },
