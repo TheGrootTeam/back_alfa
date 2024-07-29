@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
     "tsc": "tsc",
-    "initDB": "ts-node initDB.ts"
+    "initDB": "ts-node initDB.ts",
+    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
