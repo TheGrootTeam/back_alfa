@@ -1,7 +1,6 @@
 import { Document, Types } from 'mongoose';
-import { Model } from 'mongoose';
 
-export interface IApplicant extends Document{
+export interface IApplicant extends Document {
   dniCif: string;
   password: string;
   name: string;
