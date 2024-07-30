@@ -1,8 +1,7 @@
 import express from 'express';
-import LoginController from '../controllers/LoginController';
+import RegisterController from '../controllers/RegisterController';
 
-const loginController = new LoginController();
-
+const registerController = new RegisterController();
 const registerRoutes = express.Router();
 
 /**
@@ -12,66 +11,56 @@ const registerRoutes = express.Router();
  *    Register:
  *      type: object
  *      properties:
- *        message:
+ *        dniCif:
  *          type: string
- *          description: registration status message
- *      example:
- *        message: User registered successfully
- *    Error:
- *      type: object
- *      properties:
- *        error:
+ *          description: DNI/CIF of the user
+ *        password:
  *          type: string
- *          description: Error message
+ *          description: Password of the user
+ *        isCompany:
+ *          type: boolean
+ *          description: Flag to indicate if the user is a company
+ *        email:
+ *          type: string
+ *          description: Email of the user
+ *      required:
+ *        - dniCif
+ *        - password
+ *        - isCompany
+ *        - email
  *      example:
- *        error: registration error
+ *        dniCif: "12345678A"
+ *        password: "password123"
+ *        isCompany: false
+ *        email: "user@example.com"
  */
 
 /**
  * @swagger
  * tags:
  *    name: Register
- *    description: Registration Endpoints
+ *    description: Register Endpoints
  */
 
 /**
  * @swagger
  * /api/v1/register:
  *  post:
- *    summary: Register
+ *    summary: Register a new user
  *    tags: [Register]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json:
  *          schema:
- *            type: object
- *            properties:
- *              dniCif:
- *                type: string
- *              password:
- *                type: string
- *              isCompany:
- *                type: boolean
- *              email:
- *                type: string
+ *            $ref: '#/components/schemas/Register'
  *    responses:
  *      201:
  *        description: User registered successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#components/schemas/Register'
- *
  *      400:
- *        description: Bad Request
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#components/schemas/Error'
- *
+ *        description: Bad request
  */
 
-registerRoutes.post('/', loginController.register);
+registerRoutes.post('/', registerController.register);
 
 export default registerRoutes;
