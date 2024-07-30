@@ -10,7 +10,7 @@ const applicantSchema = new mongoose.Schema({
   name: {type: String, required: true},
   email: {type: String, required: true},  
   phone: {type: String, required: true},
-  photo: {type: String, required: false}, //url to image
+  photo: {type: String, default: null}, //url to image
   cv: {type: String, required: true}, //url a documento
   //Other althernative to VC
   // cv : [{
