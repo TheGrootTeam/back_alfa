@@ -5,7 +5,10 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
+import swaggerUi from 'swagger-ui-express';  
+import swaggerJSDoc from 'swagger-jsdoc'; 
 import apiRoutes from './routes';
+import { swaggerOptions } from './swagger.config';
 
 // Execute module to connect db
 import './lib/connectMongoose';
@@ -18,6 +21,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Swagger Configuration
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use(`/api/${apiVersion}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //---------------------- API routes ---------------------------
 app.use(`/api/${apiVersion}`, apiRoutes);

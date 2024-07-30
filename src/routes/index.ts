@@ -5,14 +5,14 @@ import { swaggerOptions } from '../swagger.config';
 import adsRoutes from './adsRoutes';
 import myAdsRoutes from './myAdsRoutes';
 import loginRoutes from './loginRoutes';
-import registerRoutes from './registerRoutes'; 
+import registerRoutes from './registerRoutes';
 
 const api = express.Router();
 
 // ----------------------- Login ------------------------------
 api.use('/login', loginRoutes);
 
-// ------------------------ Register --------------------------
+// ---------------------- Register ----------------------------
 api.use('/register', registerRoutes);
 
 // ------------------------ Ads -------------------------------
