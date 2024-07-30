@@ -3,8 +3,9 @@ import Company from '../models/Company';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { debug } from 'console'
-import {comparePassword, hashPassword } from '../lib/utils';
+import { comparePassword, hashPassword } from '../lib/utils';
+import { IApplicant } from '../interfaces/IApplicant';
+import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
 
@@ -43,27 +44,27 @@ export default class LoginController {
       next(error);
     }
   }
-  
+
   // index(_req: Request, res: Response, _next: NextFunction) {
   //   res.json({ token: 'Token desde LoginController!' });
   // }
   async post(req: Request, res: Response, next: NextFunction) {
-    
+
     try {
       const { dniCif, password } = req.body;
-      
+
       // find user in Applicants and Companies collections
-      
-      const userApplicant = await Applicant.findOne({ dniCif: dniCif }).exec();
-      const userCompany = await Company.findOne({ dniCif: dniCif }).exec();
-      
-      const user = userApplicant? userApplicant : userCompany;
-  
-      //@ts-ignore
-      console.log ("HASH: ", await hashPassword(user.password));
+
+      const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec();
+      let userCompany: ICompany | null = null;
+      //const userCompany: ICompany | null = await Company.findOne({ dniCif: dniCif }).exec();
+      if (!userApplicant) {
+        userCompany = await Company.findOne({ dniCif: dniCif }).exec();
+      }
+      const user = userApplicant ? userApplicant : userCompany;
 
       // throw error if don't find the user
-      if (!user || !(comparePassword(password, user.password))) {
+      if (!user || !(await comparePassword(password, user.password))) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
