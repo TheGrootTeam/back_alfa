@@ -9,12 +9,14 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJSDoc from 'swagger-jsdoc'; 
 import apiRoutes from './routes';
 import { swaggerOptions } from './swagger.config';
+import cors from 'cors';
 
 // Execute module to connect db
 import './lib/connectMongoose';
 
 const app = express();
 const apiVersion = process.env.API_VERSION;
+app.use(cors());
 
 app.use(logger('dev'));
 app.use(express.json());
