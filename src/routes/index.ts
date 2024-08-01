@@ -2,7 +2,7 @@ import express from 'express';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerOptions } from '../swagger.config';
-import adsRoutes from './adsRoutes';
+import offersRoutes from './offersRoutes';
 import myAdsRoutes from './myAdsRoutes';
 import loginRoutes from './loginRoutes';
 import registerRoutes from './registerRoutes';
@@ -15,8 +15,8 @@ api.use('/login', loginRoutes);
 // ---------------------- Register ----------------------------
 api.use('/register', registerRoutes);
 
-// ------------------------ Ads -------------------------------
-api.use('/ads', adsRoutes);
+// ------------------------ Offers -------------------------------
+api.use('/offers', offersRoutes);
 
 // ------------------------ MyAds -----------------------------
 api.use('/myAds', myAdsRoutes);
