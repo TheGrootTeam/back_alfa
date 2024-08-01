@@ -3,8 +3,9 @@ import Company from '../models/Company';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { debug } from 'console';
 import { comparePassword, hashPassword } from '../lib/utils';
+import { IApplicant } from '../interfaces/IApplicant';
+import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
   async register(req: Request, res: Response, next: NextFunction) {

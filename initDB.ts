@@ -8,12 +8,12 @@ dotenv.config();
 import connection from './src/lib/connectMongoose';
 //import models
 import models from './src/models/index';
-const { Company, Offer, User, Applicant } = models;
+const { Company, Offer, Applicant } = models;
 //library to add a security question
 import readLinea from 'node:readline';
 //import json examples
 import examples from './src/exampleDBjson/index';
-const { exUsers, exOffers, exCompanies, exApplicants } = examples;
+const { exOffers, exCompanies, exApplicants } = examples;
 
 main().catch((err) => console.log('Error in initDB: ', err));
 
@@ -34,7 +34,6 @@ async function main() {
   await initCompanies();
   await initApplicants();
   await initOffers();
-  await initUsers();
 
   connection.close();
 }
@@ -60,25 +59,14 @@ const initApplicants = async () => {
 };
 
 
-const initUsers = async () => {
-  // delete all users data
-  const deleted = await User.deleteMany();
-  console.log(`¬¬¬ Deleted ${deleted.deletedCount} users from BD ${connection.name}.`);
-
-  // create users examples
-  const initialUser = await User.insertMany(exUsers);
-
-  console.log(`··· Created ${initialUser.length} new users.`);
-};
-
 const initOffers = async () => {
   // delete all offers data
-const deleted = await Offer.deleteMany();
-console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
+  const deleted = await Offer.deleteMany();
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
 
-// crear offers examples
-const initialOffers = await Offer.insertMany(exOffers);
-console.log(`··· Created ${initialOffers.length} new offers.`);
+  // crear offers examples
+  const initialOffers = await Offer.insertMany(exOffers);
+  console.log(`··· Created ${initialOffers.length} new offers.`);
 };
 
 function fConfirmation(text: string) {
