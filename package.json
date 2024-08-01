@@ -13,6 +13,7 @@
     "format": "prettier --write src/**/*.ts",
     "tsc": "tsc",
     "initDB": "ts-node initDB.ts",
+    "initDBtest": "ts-node initDBtest.ts",
     "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js"
   },
   "dependencies": {
