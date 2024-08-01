@@ -41,7 +41,7 @@ describe('RegisterController', () => {
           isCompany: false,
           email: 'user@example.com',
         });
-      
+
       expect(res.statusCode).toEqual(201);
       expect(res.body).toHaveProperty('message', 'User registered successfully');
 
