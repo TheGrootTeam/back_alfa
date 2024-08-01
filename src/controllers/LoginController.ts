@@ -3,11 +3,10 @@ import Company from '../models/Company';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { debug } from 'console'
-import {comparePassword, hashPassword } from '../lib/utils';
+import { debug } from 'console';
+import { comparePassword, hashPassword } from '../lib/utils';
 
 export default class LoginController {
-
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { dniCif, password, isCompany, email } = req.body;
@@ -33,7 +32,7 @@ export default class LoginController {
         dniCif,
         password: hashedPassword,
         isCompany,
-        email,
+        email
       });
 
       await user.save();
@@ -43,27 +42,26 @@ export default class LoginController {
       next(error);
     }
   }
-  
+
   // index(_req: Request, res: Response, _next: NextFunction) {
   //   res.json({ token: 'Token desde LoginController!' });
   // }
   async post(req: Request, res: Response, next: NextFunction) {
-    
     try {
       const { dniCif, password } = req.body;
-      
+
       // find user in Applicants and Companies collections
-      
+
       const userApplicant = await Applicant.findOne({ dniCif: dniCif }).exec();
       const userCompany = await Company.findOne({ dniCif: dniCif }).exec();
-      
-      const user = userApplicant? userApplicant : userCompany;
-  
+
+      const user = userApplicant ? userApplicant : userCompany;
+
       //@ts-ignore
-      console.log ("HASH: ", await hashPassword(user.password));
+      console.log('HASH: ', await hashPassword(user.password));
 
       // throw error if don't find the user
-      if (!user || !(comparePassword(password, user.password))) {
+      if (!user || !comparePassword(password, user.password)) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
