@@ -1,13 +1,13 @@
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
-import User from '../models/User';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { comparePassword, hashPassword } from '../lib/utils';
+import { comparePassword } from '../lib/utils';
 import { IApplicant } from '../interfaces/IApplicant';
 import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
+
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const { dniCif, password, isCompany, email } = req.body;
@@ -62,7 +62,12 @@ export default class LoginController {
       console.log('HASH: ', await hashPassword(user.password));
 
       // throw error if don't find the user
-      if (!user || !comparePassword(password, user.password)) {
+
+      //@ts-expect-error haciendo prubas
+      const itsOk: boolean = await comparePassword(password, user.password);
+      console.log('istOk???? ', itsOk)
+      if (!user || !(itsOk)) {
+        // if (!user || !(await comparePassword(password, user.password))) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
