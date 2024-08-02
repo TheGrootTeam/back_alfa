@@ -3,8 +3,8 @@ import Company from '../models/Company';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { comparePassword } from '../lib/utils';
-import { IApplicant } from '../interfaces/IApplicant';
-import { ICompany } from '../interfaces/ICompany';
+//import { IApplicant } from '../interfaces/IApplicant';
+//import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
 
@@ -63,11 +63,9 @@ export default class LoginController {
 
       // throw error if don't find the user
 
-      //@ts-expect-error haciendo prubas
+      //@ts-expect-error ignoring the warning user
       const itsOk: boolean = await comparePassword(password, user.password);
-      console.log('istOk???? ', itsOk)
       if (!user || !(itsOk)) {
-        // if (!user || !(await comparePassword(password, user.password))) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
