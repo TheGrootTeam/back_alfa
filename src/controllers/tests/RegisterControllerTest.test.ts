@@ -1,25 +1,17 @@
 import request from 'supertest';
 import app from '../../app';
 import mongoose from 'mongoose';
-import User from '../../models/User';
-import dotenv from 'dotenv';
+import Applicant from '../../models/Applicant';
+import Company from '../../models/Company';
 
-dotenv.config();
-const MONGO_URI: string = process.env.MONGO_URI || 'mongodb://localhost:27017/proyecto_test';
-
-const connectTestDB = async () => {
-  try {
-    await mongoose.connect(MONGO_URI);
-    console.log('### Connected to MongoDB for tests');
-  } catch (err) {
-    console.error('### Error connecting to MongoDB for tests:', err);
-    process.exit(1);
-  }
-};
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/proyecto';
 
 describe('RegisterController', () => {
   beforeAll(async () => {
-    await connectTestDB();
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    } as mongoose.ConnectOptions);
   });
 
   afterAll(async () => {
@@ -27,40 +19,57 @@ describe('RegisterController', () => {
   });
 
   afterEach(async () => {
-    // Clean the database after each test
-    await User.deleteMany({});
+    // Limpiar la base de datos después de cada prueba
+    await Applicant.deleteMany({});
+    await Company.deleteMany({});
   });
 
   describe('POST /register', () => {
-    it('should register a new user', async () => {
+    it('should register a new applicant', async () => {
       const res = await request(app)
         .post('/api/v1/register')
         .send({
           dniCif: '12345678A',
           password: 'password123',
           isCompany: false,
-          email: 'user@example.com',
+          email: 'applicant@example.com'
         });
 
       expect(res.statusCode).toEqual(201);
       expect(res.body).toHaveProperty('message', 'User registered successfully');
 
-      const user = await User.findOne({ email: 'user@example.com' });
+      const user = await Applicant.findOne({ email: 'applicant@example.com' });
       expect(user).toBeTruthy();
       expect(user?.dniCif).toBe('12345678A');
-      expect(user?.isCompany).toBe(false);
-      // We do not verify the password directly because it is have you have
+    });
+
+    it('should register a new company', async () => {
+      const res = await request(app)
+        .post('/api/v1/register')
+        .send({
+          dniCif: '87654321B',
+          password: 'password123',
+          isCompany: true,
+          email: 'company@example.com'
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully');
+
+      const user = await Company.findOne({ email: 'company@example.com' });
+      expect(user).toBeTruthy();
+      expect(user?.dniCif).toBe('87654321B');
     });
 
     it('should not register a user with an existing email', async () => {
-      // Create an existing user first
+      // Crear un usuario existente primero
       await request(app)
         .post('/api/v1/register')
         .send({
           dniCif: '12345678A',
           password: 'password123',
           isCompany: false,
-          email: 'existing@example.com',
+          email: 'existing@example.com'
         });
 
       const res = await request(app)
@@ -69,7 +78,7 @@ describe('RegisterController', () => {
           dniCif: '87654321B',
           password: 'password123',
           isCompany: true,
-          email: 'existing@example.com',
+          email: 'existing@example.com'
         });
 
       expect(res.statusCode).toEqual(400);
@@ -83,7 +92,7 @@ describe('RegisterController', () => {
           dniCif: '',
           password: '',
           isCompany: undefined,
-          email: '',
+          email: ''
         });
 
       expect(res.statusCode).toEqual(400);
