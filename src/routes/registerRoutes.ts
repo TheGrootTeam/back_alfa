@@ -1,7 +1,7 @@
 import express from 'express';
 import LoginController from '../controllers/LoginController';
 
-const loginController = new LoginController();
+//const loginController = new LoginController();
 
 const registerRoutes = express.Router();
 
@@ -72,6 +72,6 @@ const registerRoutes = express.Router();
  *
  */
 
-registerRoutes.post('/', loginController.register);
+//registerRoutes.post('/', loginController.register);
 
 export default registerRoutes;

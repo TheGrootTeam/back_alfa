@@ -24,7 +24,12 @@ export default class LoginController {
       const user = userApplicant ? userApplicant : userCompany;
 
       // throw error if don't find the user
-      if (!user || !(await comparePassword(password, user.password))) {
+
+      //@ts-expect-error haciendo prubas
+      const itsOk: boolean = await comparePassword(password, user.password);
+      console.log('istOk???? ', itsOk)
+      if (!user || !(itsOk)) {
+        // if (!user || !(await comparePassword(password, user.password))) {
         res.status(401).json({ error: 'Invalid credentials' });
         return;
       }
