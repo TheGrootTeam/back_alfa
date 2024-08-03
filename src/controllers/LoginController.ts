@@ -3,8 +3,8 @@ import Company from '../models/Company';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { comparePassword } from '../lib/utils';
-//import { IApplicant } from '../interfaces/IApplicant';
-//import { ICompany } from '../interfaces/ICompany';
+import { IApplicant } from '../interfaces/IApplicant';
+import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
 
@@ -13,28 +13,36 @@ export default class LoginController {
       const { dniCif, password } = req.body;
 
       // find user in Applicants and Companies collections
-
-      const userApplicant = await Applicant.findOne({ dniCif: dniCif }).exec();
-      const userCompany = await Company.findOne({ dniCif: dniCif }).exec();
-
+      const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec();
+      let userCompany: ICompany | null = null;
+      if (!userApplicant) {
+        userCompany = await Company.findOne({ dniCif: dniCif }).exec();
+      }
       const user = userApplicant ? userApplicant : userCompany;
 
-
-      // throw error if don't find the user
-
-      //@ts-expect-error ignoring the warning user
-      const itsOk: boolean = await comparePassword(password, user.password);
-      if (!user || !(itsOk)) {
-        res.status(401).json({ error: 'Invalid credentials' });
-        return;
+      if (user !== null) {
+        const itsOk: boolean = await comparePassword(password, user.password);
+        // throw error if don't find the user or the passward to be incorrect
+        if (!user || !(itsOk)) {
+          res.status(401).json({ error: 'Invalid credentials' });
+          return;
+        }
       }
 
-      // if user exists and password is correct set a JWT with userID data
-      const tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
-        expiresIn: '2h'
-      });
+      let tokenJWT: string | null = null;
+      if (user !== null) {
+        tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
+          expiresIn: '2h'
+        });
+      }
 
-      res.json({ tokenJWT: tokenJWT });
+      if (tokenJWT !== null) {
+        res.json({ tokenJWT: tokenJWT });
+      }
+      else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
+
     } catch (error) {
       next(error);
     }
