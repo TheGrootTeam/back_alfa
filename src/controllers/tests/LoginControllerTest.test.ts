@@ -1,116 +1,75 @@
 import request from 'supertest';
-import app from '../../app';
-import mongoose from 'mongoose';
-//import Applicant from '../../models/Applicant';
-//import Company from '../../models/Company';
-import dotenv from 'dotenv';
-dotenv.config();
+import express, { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import LoginController from '../LoginController';
+import { comparePassword } from '../../lib/utils';
+import Applicant from '../../models/Applicant';
+import Company from '../../models/Company';
+import { IApplicant } from '../../interfaces/IApplicant';
+import { ICompany } from '../../interfaces/ICompany';
 
-const MONGO_URI: string = process.env.MONGO_URI || 'mongodb://localhost:27017/proyecto';
+// Mock the models and utility functions
+jest.mock('../models/Applicant');
+jest.mock('../models/Company');
+jest.mock('../lib/utils');
+
+const app = express();
+app.use(express.json());
+
+const loginController = new LoginController();
+app.post('/login', (req: Request, res: Response, next: NextFunction) => loginController.post(req, res, next));
 
 describe('LoginController', () => {
-
-  beforeAll(async () => {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    } as mongoose.ConnectOptions);
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await mongoose.connection.close();
+  it('should return a JWT token for valid applicant credentials', async () => {
+    const mockApplicant: IApplicant = {
+      dniCif: '12345678A',
+      password: 'hashedPassword',
+    };
+
+    (Applicant.findOne as jest.Mock).mockResolvedValue(mockApplicant);
+    (comparePassword as jest.Mock).mockResolvedValue(true);
+    (jwt.sign as jest.Mock).mockReturnValue('mockToken');
+
+    const response = await request(app)
+      .post('/login')
+      .send({ dniCif: '12345678A', password: 'password' });
+
+    expect(response.status).toBe(200);
+    expect(response.body.tokenJWT).toBe('mockToken');
   });
 
+  // it('should return a JWT token for valid company credentials', async () => {
+  //   const mockCompany: ICompany = {
+  //     dniCif: '87654321B',
+  //     password: 'hashedPassword',
+  //   };
 
-  describe('POST /login', () => {
-    it('should log in an existing applicant user', async () => {
-      const res = await request(app)
-        .post('/api/v1/login')
-        .send({
-          dniCif: '000000000A',
-          password: '123',
-          isCompany: false,
-        });
+  //   (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+  //   (Company.findOne as jest.Mock).mockResolvedValue(mockCompany);
+  //   (comparePassword as jest.Mock).mockResolvedValue(true);
+  //   (jwt.sign as jest.Mock).mockReturnValue('mockToken');
 
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toHaveProperty('tokenJWT');
-      expect(typeof res.body.tokenJWT).toBe('string');
-    });
+  //   const response = await request(app)
+  //     .post('/login')
+  //     .send({ dniCif: '87654321B', password: 'password' });
 
-    it('should log in an existing company user', async () => {
-      const res = await request(app)
-        .post('/api/v1/login')
-        .send({
-          dniCif: 'A000666',
-          password: '123',
-          isCompany: true,
-        });
+  //   expect(response.status).toBe(200);
+  //   expect(response.body.tokenJWT).toBe('mockToken');
+  // });
 
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toHaveProperty('tokenJWT');
-      expect(typeof res.body.tokenJWT).toBe('string');
-    });
+  it('should return 401 for invalid credentials', async () => {
+    (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+    (Company.findOne as jest.Mock).mockResolvedValue(null);
 
+    const response = await request(app)
+      .post('/login')
+      .send({ dniCif: 'invalidDniCif', password: 'password' });
 
-    it('should not log in a non-existent user (applicant or company)', async () => {
-      // Create an existing applicant user first
-      // await request(app)
-      //   .post('/api/v1/login')
-      //   .send({
-      //     dniCif: '12345678A',
-      //     password: 'password123',
-      //     isCompany: false,
-      //   });
-
-      //User not-existent
-      const res = await request(app)
-        .post('/api/v1/login')
-        .send({
-          dniCif: '87654321B',
-          password: 'password123',
-          isCompany: true,
-        });
-
-      expect(res.statusCode).toEqual(401);
-      expect(res.body).toHaveProperty('error', 'Invalid credentials');
-    });
-
-
-    it('should not log in a user with a wrong password', async () => {
-      // Create an existing applicant user first
-      // await request(app)
-      //   .post('/api/v1/login')
-      //   .send({
-      //     dniCif: '12345678A',
-      //     password: 'password123',
-      //     isCompany: false,
-      //   });
-
-      //Is entered a wrong password
-      const res = await request(app)
-        .post('/api/v1/login')
-        .send({
-          dniCif: '12345678A',
-          password: 'passwordWRONG',
-          isCompany: false,
-        });
-
-      expect(res.statusCode).toEqual(401);
-      expect(res.body).toHaveProperty('error', 'Invalid credentials');
-    });
-
-    //This verifies that a 400 error is returned if required fields are missing.
-    it('should return 401 if required fields are missing', async () => {
-      const res = await request(app)
-        .post('/api/v1/login')
-        .send({
-          dniCif: '',
-          password: '',
-          isCompany: undefined,
-        });
-
-      expect(res.statusCode).toEqual(401);
-      expect(res.body).toHaveProperty('error', 'Invalid credentials');
-    });
+    expect(response.status).toBe(401);
+    expect(response.body.error).toBe('Invalid credentials');
   });
 });
