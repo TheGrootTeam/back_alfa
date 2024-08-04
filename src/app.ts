@@ -11,6 +11,7 @@ import apiRoutes from './routes';
 import { swaggerOptions } from './swagger.config';
 import cors from 'cors';
 
+
 // Execute module to connect db
 import './lib/connectMongoose';
 
