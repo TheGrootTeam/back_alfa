@@ -52,10 +52,6 @@ describe('LoginController', () => {
       //.send({ dniCif: '12345678A', password: 'hashedPassword' });
       .send(mockApplicant);
 
-    console.log('STATUS: ', response.status);
-    console.log('RESPONSE BODY: ', response.body);
-    console.log('TOKENJWT: ', response.body.tokenJWT);
-
     expect(response.status).toBe(200);
     expect(response.body.tokenJWT).toBe('mockToken');
   });
@@ -77,7 +73,7 @@ describe('LoginController', () => {
       .send(mockCompany);
 
     expect(response.status).toBe(200);
-    expect(response.body.tokenJWT).toBe('mockToken');
+    expect(response.body.tokenJWT).to Be('mockToken');
   });
 
 
