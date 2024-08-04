@@ -4,7 +4,7 @@ import Offer from '../models/Offer';
 export default class OffersController {
   async index(_req: Request, res: Response, next: NextFunction) {
     try {
-      const offersList = await Offer.find();
+      const offersList = await Offer.find().populate('companyOwner', { name: 1 });
       res.status(200).json({ offers: offersList });
     } catch (error) {
       next(error);
