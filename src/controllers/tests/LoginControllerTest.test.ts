@@ -73,7 +73,7 @@ describe('LoginController', () => {
       .send(mockCompany);
 
     expect(response.status).toBe(200);
-    expect(response.body.tokenJWT).to Be('mockToken');
+    expect(response.body.tokenJWT).toBe('mockToken');
   });
 
 
