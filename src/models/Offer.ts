@@ -11,7 +11,7 @@ const OfferSchema = new mongoose.Schema({
     required: false,
     index: true
   },
-  status: { type: Boolean, required: true, index: true }, //abierta o cerrada
+  status: { type: Boolean, required: true, index: true }, //open or close
   numberVacancies: { type: Number, required: true },
   listApplicants: [
     {
