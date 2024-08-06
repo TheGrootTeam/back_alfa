@@ -45,21 +45,30 @@ describe('CreateOfferController', () => {
     const offerInstance = new Offer(mockOffer);
     (offerInstance.save as jest.Mock).mockResolvedValue(offerInstance);
 
-    console.log('XX Mock Offer:', mockOffer);
+    const response = await request(app)
+      .post('/offers')
+      .send(mockOffer);
+    expect(response.status).toBe(201);
+    expect(response.body.message).toBe('Offer registered successfully');
+  });
+
+
+  it('Should return 400 if there are any fields arent presents', async () => {
+    const mockOffer: Partial<IOffer> = {
+      position: "Casos de prueba",
+      description: "Tareas de prueba. No se garantiza la supervivencia",
+    };
+
+    //Create an instance of the Offer model and mock the save method
+    const offerInstance = new Offer(mockOffer);
+    (offerInstance.save as jest.Mock).mockResolvedValue(offerInstance);
 
     const response = await request(app)
       .post('/offers')
       .send(mockOffer);
-
-    console.log('XX Response Status:', response.status);
-    console.log('XX Response Body:', response.body);
-
-
-    expect(response.status).toBe(201);
-    expect(response.body.message).toBe('Offer registered successfully');
-
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBe('There are fields required that there arent presents');
   });
-
 
 });
 
