@@ -8,16 +8,17 @@ const OfferSchema = new mongoose.Schema({
   companyOwner: {
     type: Schema.Types.ObjectId,
     ref: 'Company',
-    required: false,
+    required: true,
     index: true
   },
-  status: { type: Boolean, required: true, index: true }, //abierta o cerrada
+  status: { type: Boolean, required: true, index: true }, //open or close
   numberVacancies: { type: Number, required: true },
   listApplicants: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Applicant',
-      required: false
+      required: false,
+      default: []
     }
   ],
   numberApplicants: { type: Number, required: false }

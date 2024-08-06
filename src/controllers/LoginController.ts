@@ -13,10 +13,12 @@ export default class LoginController {
       const { dniCif, password } = req.body;
 
       // find user in Applicants and Companies collections
-      const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec();
+      //const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in tje test
+      const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif });
       let userCompany: ICompany | null = null;
       if (!userApplicant) {
-        userCompany = await Company.findOne({ dniCif: dniCif }).exec();
+        //userCompany = await Company.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in the test
+        userCompany = await Company.findOne({ dniCif: dniCif });
       }
       const user = userApplicant ? userApplicant : userCompany;
 
