@@ -10,3 +10,15 @@ export interface IOffer extends Document {
   listApplicants?: Types.ObjectId[];
   numberApplicants: number;
 }
+
+// ---------------------- TEST --------------------
+export interface IOfferTest {
+  position: string;
+  publicationDate: string;
+  description: string;
+  companyOwner: string;
+  status: boolean;
+  numberVacancies: number;
+  listApplicants?: string[];
+  numberApplicants: number;
+}
