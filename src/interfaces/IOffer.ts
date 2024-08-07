@@ -1,4 +1,4 @@
-import { Document, Types, Model } from 'mongoose';
+import { Document, Types, Model, Query } from 'mongoose';
 
 export interface IOffer extends Document {
   position: string;
@@ -12,7 +12,7 @@ export interface IOffer extends Document {
 }
 
 export interface IOfferModel extends Model<IOffer> {
-  listing(filter: IOffersFilter, skip?: string, limit?: string, sort?: string): Promise<IOffer[]>;
+  listing(filter: IOffersFilter, skip?: string, limit?: string, sort?: string): Query<IOffer[], IOffer>;
 }
 
 export interface IOffersFilter {
@@ -20,9 +20,7 @@ export interface IOffersFilter {
   position?: RegExp | string;
   publicationDate?: string;
   description?: RegExp | string;
-  companyOwner?: {
-    $in: string;
-  };
+  companyOwner?: RegExp | string;
   status?: string;
 }
 

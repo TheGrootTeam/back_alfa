@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { IOffersFilter } from '../interfaces/IOffer';
 import Offer from '../models/Offer';
 
-export function offersList(req: Request) {
+export async function offersList(req: Request) {
   // types of filtering
   const filterById = req.query.id as string;
   const filterByPosition = req.query.position as string;
@@ -34,13 +34,16 @@ export function offersList(req: Request) {
     filter.description = new RegExp(filterByDescription, 'i');
   }
   if (filterByCompanyOwner) {
-    filter.companyOwner = { $in: filterByCompanyOwner };
+    filter.companyOwner = new RegExp(filterByDescription, 'i');
   }
   if (filterByStatus) {
     filter.status = filterByStatus;
   }
 
-  const offers = Offer.listing(filter, skip, limit, sort);
+  //const offers = Offer.listing(filter, skip, limit, sort).populate('companyOwner', { name: 1 });
+
+  const query = Offer.listing(filter, skip, limit, sort);
+  const offers = await query.populate('companyOwner', { name: 1 }).exec();
 
   return offers;
 }

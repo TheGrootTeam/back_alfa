@@ -1,5 +1,5 @@
 //const mongoose = require('mongoose');
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Query, Schema } from 'mongoose';
 import { IOffer, IOfferModel, IOffersFilter } from '../interfaces/IOffer';
 
 const OfferSchema = new mongoose.Schema({
@@ -25,13 +25,18 @@ const OfferSchema = new mongoose.Schema({
   numberApplicants: { type: Number, required: false }
 });
 
-OfferSchema.statics.listing = function (filter: IOffersFilter, skip?: string, limit?: string, sort?: string) {
+OfferSchema.statics.listing = function (
+  filter: IOffersFilter,
+  skip?: string,
+  limit?: string,
+  sort?: string
+): Query<IOffer[], IOffer> {
   const query = this.find(filter);
   query.skip(skip);
   query.limit(limit);
   query.sort(sort);
 
-  return query.exec();
+  return query;
 };
 
 const Offer = mongoose.model<IOffer, IOfferModel>('Offer', OfferSchema);
