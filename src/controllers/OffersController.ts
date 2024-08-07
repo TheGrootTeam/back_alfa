@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import Offer from '../models/Offer';
+import { offersList } from '../lib/offersUtils';
 
 export default class OffersController {
-  async index(_req: Request, res: Response, next: NextFunction) {
+  async index(req: Request, res: Response, next: NextFunction) {
     try {
-      const offersList = await Offer.find().populate('companyOwner', { name: 1 });
-      res.status(200).json({ offers: offersList });
+      const offers = await offersList(req); //await Offer.find().populate('companyOwner', { name: 1 });
+      res.status(200).json({ offers: offers });
     } catch (error) {
       next(error);
     }
