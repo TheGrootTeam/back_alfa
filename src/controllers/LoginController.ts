@@ -7,35 +7,45 @@ import { IApplicant } from '../interfaces/IApplicant';
 import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
+
   async post(req: Request, res: Response, next: NextFunction) {
     try {
       const { dniCif, password } = req.body;
 
-      // Find user in Applicants and Companies collections
+      // find user in Applicants and Companies collections
       const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec();
       let userCompany: ICompany | null = null;
-
-      // Only search in Company if Applicant is not found
       if (!userApplicant) {
         userCompany = await Company.findOne({ dniCif: dniCif }).exec();
       }
-
       const user = userApplicant ? userApplicant : userCompany;
 
-      // Throw error if user is not found or password is incorrect
-      if (!user || !(await comparePassword(password, user.password))) {
-        res.status(401).json({ error: 'Invalid credentials' });
-        return;
+      if (user !== null) {
+        const itsOk: boolean = await comparePassword(password, user.password);
+        // throw error if don't find the user or the passward to be incorrect
+        if (!user || !(itsOk)) {
+          res.status(401).json({ error: 'Invalid credentials' });
+          return;
+        }
       }
 
-      // If user exists and password is correct, generate a JWT with userId
-      const tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
-        expiresIn: '2h'
-      });
+      let tokenJWT: string | null = null;
+      if (user !== null) {
+        tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
+          expiresIn: '2h'
+        });
+      }
 
-      res.json({ tokenJWT: tokenJWT });
+      if (tokenJWT !== null) {
+        res.json({ tokenJWT: tokenJWT });
+      }
+      else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
+
     } catch (error) {
       next(error);
     }
   }
 }
+
