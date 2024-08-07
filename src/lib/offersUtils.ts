@@ -31,7 +31,7 @@ export function offersList(req: Request) {
     filter.publicationDate = filterByPublicationDate;
   }
   if (filterByDescription) {
-    filter.description = filterByDescription;
+    filter.description = new RegExp(filterByDescription, 'i');
   }
   if (filterByCompanyOwner) {
     filter.companyOwner = { $in: filterByCompanyOwner };

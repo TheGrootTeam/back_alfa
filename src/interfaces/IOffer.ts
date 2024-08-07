@@ -17,9 +17,9 @@ export interface IOfferModel extends Model<IOffer> {
 
 export interface IOffersFilter {
   id?: string;
-  position?: RegExp;
+  position?: RegExp | string;
   publicationDate?: string;
-  description?: string;
+  description?: RegExp | string;
   companyOwner?: {
     $in: string;
   };
