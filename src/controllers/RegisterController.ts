@@ -14,11 +14,16 @@ export default class RegisterController {
         return;
       }
 
-      // Verify if the user already exists in either collection
+      // Check if the applicant already exists
       const applicantExists = await Applicant.findOne({ email });
-      const companyExists = await Company.findOne({ email });
+      if (applicantExists) {
+        res.status(400).json({ message: 'User already exists' });
+        return;
+      }
 
-      if (applicantExists || companyExists) {
+      // Check if the company already exists only if the applicant doesn't
+      const companyExists = await Company.findOne({ email });
+      if (companyExists) {
         res.status(400).json({ message: 'User already exists' });
         return;
       }

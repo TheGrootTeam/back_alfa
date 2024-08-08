@@ -1,6 +1,6 @@
-import { Document, Types } from "mongoose";
+import { Document, Types } from 'mongoose';
 
-export interface ICompany extends Document{
+export interface ICompany extends Document {
   dniCif: string;
   password: string; // Apply hash
   name: string;
