@@ -1,10 +1,15 @@
 import { Document, Types, Model, Query } from 'mongoose';
 
+export interface IOfferPopulate {
+  _id: Types.ObjectId;
+  name: string;
+}
+
 export interface IOffer extends Document {
   position: string;
   publicationDate: Date;
   description: string;
-  companyOwner: Types.ObjectId;
+  companyOwner: Types.ObjectId | IOfferPopulate;
   status: boolean;
   numberVacancies: number;
   listApplicants?: Types.ObjectId[];

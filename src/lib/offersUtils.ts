@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { IOffersFilter } from '../interfaces/IOffer';
+import { IOfferPopulate, IOffersFilter } from '../interfaces/IOffer';
 import Offer from '../models/Offer';
 
 export async function offersList(req: Request) {
@@ -33,17 +33,24 @@ export async function offersList(req: Request) {
   if (filterByDescription) {
     filter.description = new RegExp(filterByDescription, 'i');
   }
-  if (filterByCompanyOwner) {
-    filter.companyOwner = new RegExp(filterByDescription, 'i');
-  }
   if (filterByStatus) {
     filter.status = filterByStatus;
   }
 
-  //const offers = Offer.listing(filter, skip, limit, sort).populate('companyOwner', { name: 1 });
-
   const query = Offer.listing(filter, skip, limit, sort);
   const offers = await query.populate('companyOwner', { name: 1 }).exec();
+
+  // we must have the list of offers in order to filter by company
+  if (filterByCompanyOwner) {
+    const companyOwnerFilter = new RegExp(filterByCompanyOwner, 'i');
+    const offersCompany = offers.filter((offer) => {
+      if (typeof offer.companyOwner !== 'object' || !('name' in offer.companyOwner)) {
+        return false;
+      }
+      return companyOwnerFilter.test((offer.companyOwner as IOfferPopulate).name);
+    });
+    return offersCompany;
+  }
 
   return offers;
 }
