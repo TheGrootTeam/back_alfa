@@ -1,5 +1,6 @@
 //const mongoose = require('mongoose');
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Query, Schema } from 'mongoose';
+import { IOffer, IOfferModel, IOffersFilter } from '../interfaces/IOffer';
 
 const OfferSchema = new mongoose.Schema({
   position: { type: String, required: true, index: true },
@@ -24,7 +25,21 @@ const OfferSchema = new mongoose.Schema({
   numberApplicants: { type: Number, required: false }
 });
 
-const Offer = mongoose.model('Offer', OfferSchema);
+OfferSchema.statics.listing = function (
+  filter: IOffersFilter,
+  skip?: string,
+  limit?: string,
+  sort?: string
+): Query<IOffer[], IOffer> {
+  const query = this.find(filter);
+  query.skip(skip);
+  query.limit(limit);
+  query.sort(sort);
+
+  return query;
+};
+
+const Offer = mongoose.model<IOffer, IOfferModel>('Offer', OfferSchema);
 
 //module.exports = InternshipPosition;
 export default Offer;
