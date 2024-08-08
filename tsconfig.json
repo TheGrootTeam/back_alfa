@@ -107,6 +107,12 @@
   },
   "include": ["src/**/*", "src/**/*.test.ts"],
   "exclude": [
-    "src/**/*.spec.ts"
+    "node_modules",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.spec.ts",
+    "src/**/*.spec.tsx",
+    "src/__tests__/**",
+    "src/**/__tests__/**"
   ]
 }
