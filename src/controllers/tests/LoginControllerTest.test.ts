@@ -8,7 +8,7 @@ import Applicant from '../../models/Applicant';
 import Company from '../../models/Company';
 import { IApplicant } from '../../interfaces/IApplicant';
 import { ICompany } from '../../interfaces/ICompany';
-import { modelNames } from 'mongoose';
+
 
 
 
@@ -21,10 +21,11 @@ jest.mock('jsonwebtoken');
 const app = express();
 app.use(express.json());
 
+
 const loginController = new LoginController();
 app.post('/login', (req: Request, res: Response, next: NextFunction) => loginController.post(req, res, next));
 
-//Middleware de manejo de errores
+//Error handling middleware
 app.use((err: HttpError, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack); // Log to depuration
   res.status(500).json({ message: err.message });

@@ -1,98 +1,127 @@
 import request from 'supertest';
-import app from '../../app';
-import mongoose from 'mongoose';
+import express, { Request, Response, NextFunction } from 'express';
+import { HttpError } from 'http-errors';
+import RegisterController from '../RegisterController';
 import Applicant from '../../models/Applicant';
 import Company from '../../models/Company';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/proyecto';
+// Mocking the models
+jest.mock('../../models/Applicant');
+jest.mock('../../models/Company');
+
+// Create the Express application for testing
+const app = express();
+app.use(express.json());
+
+// Instantiate the controller and define the route
+const registerController = new RegisterController();
+app.post('/register', (req: Request, res: Response, next: NextFunction) =>
+  registerController.register(req, res, next)
+);
+
+// Error handling middleware
+app.use(
+  (err: HttpError, _req: Request, res: Response, _next: NextFunction) => {
+    console.error(err.stack); // Log for debugging
+    res.status(500).json({ message: err.message });
+  }
+);
 
 describe('RegisterController', () => {
-  beforeAll(async () => {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    } as mongoose.ConnectOptions);
-  });
-
-  afterAll(async () => {
-    await mongoose.connection.close();
-  });
-
-  afterEach(async () => {
-    // Limpiar la base de datos después de cada prueba
-    await Applicant.deleteMany({});
-    await Company.deleteMany({});
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   describe('POST /register', () => {
     it('should register a new applicant', async () => {
+      // Set up the mock so that findOne returns null (user not found)
+      (Applicant.findOne as jest.Mock).mockResolvedValueOnce(null);
+      (Company.findOne as jest.Mock).mockResolvedValueOnce(null);
+
+      // Mock the save function of the prototype
+      const saveMock = jest.fn().mockResolvedValueOnce({});
+      (Applicant.prototype.save as jest.Mock) = saveMock;
+
       const res = await request(app)
-        .post('/api/v1/register')
+        .post('/register')
         .send({
           dniCif: '12345678A',
           password: 'password123',
           isCompany: false,
-          email: 'applicant@example.com'
+          email: 'applicant@example.com',
         });
 
       expect(res.statusCode).toEqual(201);
-      expect(res.body).toHaveProperty('message', 'User registered successfully');
-
-      const user = await Applicant.findOne({ email: 'applicant@example.com' });
-      expect(user).toBeTruthy();
-      expect(user?.dniCif).toBe('12345678A');
+      expect(res.body).toHaveProperty(
+        'message',
+        'User registered successfully'
+      );
+      expect(Applicant.findOne).toHaveBeenCalledWith({
+        email: 'applicant@example.com',
+      });
+      expect(saveMock).toHaveBeenCalled();
     });
 
     it('should register a new company', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValueOnce(null);
+      (Company.findOne as jest.Mock).mockResolvedValueOnce(null);
+
+      // Mock the save function of the prototype
+      const saveMock = jest.fn().mockResolvedValueOnce({});
+      (Company.prototype.save as jest.Mock) = saveMock;
+
       const res = await request(app)
-        .post('/api/v1/register')
+        .post('/register')
         .send({
           dniCif: '87654321B',
           password: 'password123',
           isCompany: true,
-          email: 'company@example.com'
+          email: 'company@example.com',
         });
 
       expect(res.statusCode).toEqual(201);
-      expect(res.body).toHaveProperty('message', 'User registered successfully');
-
-      const user = await Company.findOne({ email: 'company@example.com' });
-      expect(user).toBeTruthy();
-      expect(user?.dniCif).toBe('87654321B');
+      expect(res.body).toHaveProperty(
+        'message',
+        'User registered successfully'
+      );
+      expect(Company.findOne).toHaveBeenCalledWith({
+        email: 'company@example.com',
+      });
+      expect(saveMock).toHaveBeenCalled();
     });
 
     it('should not register a user with an existing email', async () => {
-      // Crear un usuario existente primero
-      await request(app)
-        .post('/api/v1/register')
-        .send({
-          dniCif: '12345678A',
-          password: 'password123',
-          isCompany: false,
-          email: 'existing@example.com'
-        });
+      // Set up the mock so that Applicant's findOne returns a user (email already exists)
+      (Applicant.findOne as jest.Mock).mockResolvedValueOnce({
+        email: 'existing@example.com',
+      });
+      // We don't need to set up Company.findOne, because if Applicant.findOne finds something, Company.findOne should not be called.
 
       const res = await request(app)
-        .post('/api/v1/register')
+        .post('/register')
         .send({
           dniCif: '87654321B',
           password: 'password123',
           isCompany: true,
-          email: 'existing@example.com'
+          email: 'existing@example.com',
         });
 
       expect(res.statusCode).toEqual(400);
       expect(res.body).toHaveProperty('message', 'User already exists');
+      expect(Applicant.findOne).toHaveBeenCalledWith({
+        email: 'existing@example.com',
+      });
+      expect(Company.findOne).not.toHaveBeenCalled(); 
     });
 
     it('should return 400 if required fields are missing', async () => {
       const res = await request(app)
-        .post('/api/v1/register')
+        .post('/register')
         .send({
           dniCif: '',
           password: '',
           isCompany: undefined,
-          email: ''
+          email: '',
         });
 
       expect(res.statusCode).toEqual(400);
