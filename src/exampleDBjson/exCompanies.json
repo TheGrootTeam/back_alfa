@@ -5,9 +5,10 @@
     "name": "Apple",
     "email": "apple@mail.es",
     "phone": "000000000",
-    "sector": "Avaricia y Telecomunicaciones",
+    "sector": "698364d8648859c8876c5b32",
     "ubication": "Hell",
     "description": "Vendemos lo mismo que otros pero más chic y, por tanto, más caro",
+    "logo": "/public/companies/logos/appleLogo.jpg",
     "publishedOffers": []
   },
   {
@@ -16,9 +17,10 @@
     "name": "Google",
     "email": "google@mail.es",
     "phone": "000000000",
-    "sector": "Tecnológicas",
+    "sector": "665364d8648803c8516c5m45",
     "ubication": "EEUU",
     "description": "La tecnología a tu alcance a cambio de tus datos (y algo de tu alma)",
+    "logo": "/public/companies/logos/googleLogo.jpg",
     "publishedOffers": []
   }
 ]
