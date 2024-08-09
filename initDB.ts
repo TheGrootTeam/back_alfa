@@ -8,12 +8,12 @@ dotenv.config();
 import connection from './src/lib/connectMongoose';
 //import models
 import models from './src/models/index';
-const { Company, Offer, Applicant } = models;
+const { Company, Offer, Applicant, Rol, Skill, Sector } = models;
 //library to add a security question
 import readLinea from 'node:readline';
 //import json examples
 import examples from './src/exampleDBjson/index';
-const { exOffers, exCompanies, exApplicants } = examples;
+const { exOffers, exCompanies, exApplicants, exRols, exSkills, exSectors } = examples;
 
 main().catch((err) => console.log('Error in initDB: ', err));
 
@@ -34,6 +34,9 @@ async function main() {
   await initCompanies();
   await initApplicants();
   await initOffers();
+  await initRols();
+  await initSkills();
+  await initSectors();
 
   connection.close();
 }
@@ -51,22 +54,51 @@ const initCompanies = async () => {
 const initApplicants = async () => {
   //delete all applicants data
   const deleted = await Applicant.deleteMany();
-  console.log(`¬¬¬ Deleted ${deleted.deletedCount} applicants form BD ${connection.name}.`);
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} applicants from BD ${connection.name}.`);
 
   // create applicants examples
   const initialApplicants = await Applicant.insertMany(exApplicants);
   console.log(`··· Created ${initialApplicants.length} new applicants.`);
 };
 
-
 const initOffers = async () => {
   // delete all offers data
   const deleted = await Offer.deleteMany();
-  console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers form BD ${connection.name}.`);
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} offers from BD ${connection.name}.`);
 
   // crear offers examples
   const initialOffers = await Offer.insertMany(exOffers);
   console.log(`··· Created ${initialOffers.length} new offers.`);
+};
+
+const initRols = async () => {
+  // delete all rols data
+  const deleted = await Rol.deleteMany();
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} rols from BD ${connection.name}.`);
+
+  // create rols examples
+  const initialRols = await Rol.insertMany(exRols);
+  console.log(`··· Created ${initialRols.length} new rols.`);
+};
+
+const initSkills = async () => {
+  // delete all skills data
+  const deleted = await Skill.deleteMany();
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} skills from BD ${connection.name}.`);
+
+  // create skills examples
+  const initialSkills = await Skill.insertMany(exSkills);
+  console.log(`··· Created ${initialSkills.length} new skills.`);
+};
+
+const initSectors = async () => {
+  // delete all sectors data
+  const deleted = await Sector.deleteMany();
+  console.log(`¬¬¬ Deleted ${deleted.deletedCount} sectors from BD ${connection.name}.`);
+
+  // create sectors examples
+  const initialSectors = await Sector.insertMany(exSectors);
+  console.log(`··· Created ${initialSectors.length} new sectors.`);
 };
 
 function fConfirmation(text: string) {
