@@ -40,3 +40,15 @@ export interface IOfferTest {
   listApplicants?: string[];
   numberApplicants: number;
 }
+
+// -----------------InitDB -------------------
+export interface IOfferEx {
+  position: string;
+  publicationDate: string;
+  description: string;
+  companyOwner: Types.ObjectId | string;
+  status: boolean;
+  numberVacancies: number;
+  listApplicants?: Types.ObjectId[];
+  numberApplicants: number;
+}
