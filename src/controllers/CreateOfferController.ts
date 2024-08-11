@@ -8,7 +8,7 @@ export default class CreateOfferController {
       const newOffer = req.body;
       const { position, publicationDate, description, companyOwner, status, numberVacancies } = req.body;
 
-      //Validate the fields 
+      //Validate the fields
       if (!position || !publicationDate || !description || !companyOwner || !status || !numberVacancies) {
         res.status(400).json({ message: 'There are fields required that there arent presents' });
         return;
