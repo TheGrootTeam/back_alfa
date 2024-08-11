@@ -6,11 +6,10 @@ export default class CreateOfferController {
 
     try {
       const newOffer = req.body;
-      const { position, publicationDate, description, companyOwner, status, numberVacancies, numberApplicants } = req.body;
+      const { position, publicationDate, description, companyOwner, status, numberVacancies } = req.body;
 
-      //Validate the fields recibed
-      if (!position || !publicationDate || !description || !companyOwner
-        || !status || !numberVacancies || !numberApplicants) {
+      //Validate the fields
+      if (!position || !publicationDate || !description || !companyOwner || !status || !numberVacancies) {
         res.status(400).json({ message: 'There are fields required that there arent presents' });
         return;
       }
@@ -19,7 +18,7 @@ export default class CreateOfferController {
       res.status(201).json({ message: 'Offer registered successfully' });
 
     } catch (error) {
-      res.status(500).json({ message: 'Internal fucking server error' });
+      res.status(500).json({ message: 'Internal server error' });
       next(error);
     }
 
