@@ -7,6 +7,6 @@ const createOfferController = new CreateOfferController();
 
 const offersRoutes = express.Router();
 offersRoutes.get('/', offersController.index);
-offersRoutes.post('/', createOfferController.post);
+offersRoutes.post('/new', createOfferController.post);
 
 export default offersRoutes;
