@@ -8,22 +8,15 @@ export default class RegisterController {
     try {
       const { dniCif, password, isCompany, email } = req.body;
 
-      // validateFields
+      // Validate required fields
       if (!dniCif || !password || isCompany === undefined || !email) {
         res.status(400).json({ message: 'All fields are required' });
         return;
       }
 
-      // Check if the applicant already exists
-      const applicantExists = await Applicant.findOne({ email });
-      if (applicantExists) {
-        res.status(400).json({ message: 'User already exists' });
-        return;
-      }
-
-      // Check if the company already exists only if the applicant doesn't
-      const companyExists = await Company.findOne({ email });
-      if (companyExists) {
+      // Check if the applicant or company already exists
+      const userExists = await Applicant.findOne({ email }) || await Company.findOne({ email });
+      if (userExists) {
         res.status(400).json({ message: 'User already exists' });
         return;
       }
@@ -31,35 +24,28 @@ export default class RegisterController {
       // Password hash
       const hashedPassword = await hashPassword(password);
 
-      // Create new user in the appropriate collection with default values
-      const defaultApplicantFields = {
+      // Minimal fields for new user creation
+      const minimalFields = {
         dniCif,
         password: hashedPassword,
         email,
-        name: 'Default Name', // default name
-        phone: '0000000000', // default phone
-        cv: 'default_cv_url', // default cv url
-        role: 'default_role', // default role
-        typeJob: 'default_typeJob', // default type job
-        wantedJob: 'default_wantedJob', // default wanted job
+        name: 'Default Name',
+        lastName: 'Default Last Name',
+        phone: '0000000000',
+        cv: 'default_cv_url',
+        role: 'default_role',
+        typeJob: 'default_typeJob',
+        internType: 'default_internType',
+        wantedRol: [],
+        mainSkills: [],
+        wantedJob: 'default_wantedJob',
         geographically_mobile: false,
         disponibility: false
       };
 
-      const defaultCompanyFields = {
-        dniCif,
-        password: hashedPassword,
-        email,
-        name: 'Default Name', // default name
-        phone: '0000000000', // default phone
-        sector: 'default_sector', // default sector
-        ubication: 'default_ubication', // default ubication
-        description: 'default_description' // default description
-      };
-
       const user = isCompany
-        ? new Company(defaultCompanyFields)
-        : new Applicant(defaultApplicantFields);
+        ? new Company({ ...minimalFields, sector: 'default_sector', ubication: 'default_ubication', description: 'default_description', logo: 'default_logo_url' })
+        : new Applicant(minimalFields);
 
       await user.save();
 
