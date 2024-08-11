@@ -24,6 +24,11 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
 
 # Distribution / packaging
 env/

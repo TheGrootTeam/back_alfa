@@ -1,0 +1,158 @@
+[
+  {
+    "skill": "HTML/CSS"
+  },
+  {
+    "skill": "JavaScript"
+  },
+  {
+    "skill": "TypeScript"
+  },
+  {
+    "skill": "React"
+  },
+  {
+    "skill": "Angular"
+  },
+  {
+    "skill": "Vue"
+  },
+  {
+    "skill": "Node"
+  },
+  {
+    "skill": "SQL"
+  },
+  {
+    "skill": "NoSQL"
+  },
+  {
+    "skill": "Git/GitHub"
+  },
+  {
+    "skill": "REST API"
+  },
+  {
+    "skill": "Python"
+  },
+  {
+    "skill": "R"
+  },
+  {
+    "skill": "Pandas/Numpy"
+  },
+  {
+    "skill": "TensorFlow"
+  },
+  {
+    "skill": "PyTorch"
+  },
+  {
+    "skill": "Power BI"
+  },
+  {
+    "skill": "Excel"
+  },
+  {
+    "skill": "Figma"
+  },
+  {
+    "skill": "Adobe XD"
+  },
+  {
+    "skill": "Sketch"
+  },
+  {
+    "skill": "Adobe Photoshop"
+  },
+  {
+    "skill": "Adobe Illustrator"
+  },
+  {
+    "skill": "Wireframing"
+  },
+  {
+    "skill": "UX Research"
+  },
+  {
+    "skill": "Java"
+  },
+  {
+    "skill": "C#"
+  },
+  {
+    "skill": "Swift"
+  },
+  {
+    "skill": "Kotlin"
+  },
+  {
+    "skill": "Metodologías Agile"
+  },
+  {
+    "skill": "Integración de API"
+  },
+  {
+    "skill": "Seguridad de Redes"
+  },
+  {
+    "skill": "Pentration Testing Tools"
+  },
+  {
+    "skill": "Criptografía"
+  },
+  {
+    "skill": "Respuesta a Incidentes"
+  },
+  {
+    "skill": "Linux/Unix"
+  },
+  {
+    "skill": "AWS"
+  },
+  {
+    "skill": "Azure"
+  },
+  {
+    "skill": "Docker"
+  },
+  {
+    "skill": "Kubernetes"
+  },
+  {
+    "skill": "CI/CD Pipelines"
+  },
+  {
+    "skill": "Terraform"
+  },
+  {
+    "skill": "Solidity"
+  },
+  {
+    "skill": "Ethereum"
+  },
+  {
+    "skill": "Sistemas Distribuidos"
+  },
+  {
+    "skill": "JIRA"
+  },
+  {
+    "skill": "Automated Testing"
+  },
+  {
+    "skill": "Documentación Técnica"
+  },
+  {
+    "skill": "AI & Machine Learning"
+  },
+  {
+    "skill": "Natural Language Processing (NPL)"
+  },
+  {
+    "skill": "Redes Neuronales"
+  },
+  {
+    "skill": "Deep Learning"
+  }
+]
