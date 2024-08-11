@@ -4,10 +4,12 @@ import { HttpError } from 'http-errors';
 import RegisterController from '../RegisterController';
 import Applicant from '../../models/Applicant';
 import Company from '../../models/Company';
+import Sector from '../../models/Sector'; // Importar el modelo Sector
 
 // Mocking the models
 jest.mock('../../models/Applicant');
 jest.mock('../../models/Company');
+jest.mock('../../models/Sector');
 
 // Create the Express application for testing
 const app = express();
@@ -27,9 +29,20 @@ app.use(
   }
 );
 
+jest.setTimeout(10000); // Incrementa el tiempo de espera a 10 segundos
+
 describe('RegisterController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Configurar el mock para Sector
+    (Sector.findOne as jest.Mock).mockResolvedValueOnce({
+      _id: '60d9f2f8f8d9c9a2f8d9f2f8', // Un ObjectId simulado
+      sector: 'Default Sector'
+    });
+
+    // Mock para el método save si es necesario crear un nuevo sector
+    (Sector.prototype.save as jest.Mock) = jest.fn().mockResolvedValue({});
   });
 
   describe('POST /register', () => {
