@@ -22,7 +22,11 @@ const OfferSchema = new mongoose.Schema({
       default: []
     }
   ],
-  numberApplicants: { type: Number, required: false }
+  numberApplicants: { type: Number, required: false },
+  location: { type: String, required: true, index: true },
+  typeJob: { type: String, required: true, index: true }, // presencial, teletrabajo, híbrido
+  internJob: { type: String, required: true, index: true } // renumerado, no renumerado, ONG 
+
 });
 
 OfferSchema.statics.listing = function (
