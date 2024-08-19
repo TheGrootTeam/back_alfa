@@ -14,6 +14,9 @@ export interface IOffer extends Document {
   numberVacancies: number;
   listApplicants?: Types.ObjectId[];
   numberApplicants: number;
+  location: string;
+  typeJob: string; // presencial, teletrabajo, híbrido
+  internJob: string; // renumerado, no renumerado, ONG 
 }
 
 export interface IOfferModel extends Model<IOffer> {

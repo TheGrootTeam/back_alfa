@@ -22,7 +22,11 @@ const OfferSchema = new mongoose.Schema({
       default: []
     }
   ],
-  numberApplicants: { type: Number, required: false }
+  numberApplicants: { type: Number, required: false },
+  location: { type: String, required: true, index: true },
+  typeJob: { type: String, required: true, index: true }, // presencial, teletrabajo, híbrido
+  internJob: { type: String, required: true, index: true } // renumerado, no renumerado, ONG 
+
 });
 
 OfferSchema.statics.listing = function (
@@ -37,6 +41,11 @@ OfferSchema.statics.listing = function (
   query.sort(sort);
 
   return query;
+};
+
+//Method for obtaining a specific offert for her id
+OfferSchema.statics.findById = function (id: string): Query<IOffer | null, IOffer> {
+  return this.findOne({ _id: id });
 };
 
 const Offer = mongoose.model<IOffer, IOfferModel>('Offer', OfferSchema);

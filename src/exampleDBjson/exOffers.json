@@ -7,7 +7,10 @@
     "status": true,
     "numberVacancies": 1,
     "listApplicants": [],
-    "numberApplicants": 1
+    "numberApplicants": 0,
+    "location": "Madrid",
+    "typeJob": "presencial",
+    "internJob": "no renumerado"
   },
   {
     "position": "Puesto Chollazo",
@@ -17,7 +20,10 @@
     "status": true,
     "numberVacancies": 1,
     "listApplicants": [],
-    "numberApplicants": 1
+    "numberApplicants": 1,
+    "location": "Bilbao",
+    "typeJob": "teletrabajo",
+    "internJob": "renumerado"
   },
   {
     "position": "Becario para startup",
@@ -27,7 +33,10 @@
     "status": true,
     "numberVacancies": 3,
     "listApplicants": [],
-    "numberApplicants": 0
+    "numberApplicants": 0,
+    "location": "Madrid",
+    "typeJob": "hibrido",
+    "internJob": "no renumerado"
   },
   {
     "position": "Puesto aprendiz frontend con React",
@@ -37,7 +46,10 @@
     "status": true,
     "numberVacancies": 4,
     "listApplicants": [],
-    "numberApplicants": 3
+    "numberApplicants": 3,
+    "location": "Barcelona",
+    "typeJob": "teletrabajo",
+    "internJob": "no renumerado"
   },
   {
     "position": "Becario para backend",
@@ -47,7 +59,10 @@
     "status": true,
     "numberVacancies": 2,
     "listApplicants": [],
-    "numberApplicants": 0
+    "numberApplicants": 0,
+    "location": "Valencia",
+    "typeJob": "presencial",
+    "internJob": "no renumerado"
   },
   {
     "position": "Puesto de vespa",
@@ -57,6 +72,9 @@
     "status": true,
     "numberVacancies": 2,
     "listApplicants": [],
-    "numberApplicants": 3
+    "numberApplicants": 3,
+    "location": "Donostia-S.Sebastián",
+    "typeJob": "hibrido",
+    "internJob": "no renumerado"
   }
 ]
