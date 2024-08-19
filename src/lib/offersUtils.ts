@@ -1,9 +1,8 @@
 import { Request } from 'express';
-import { IOfferPopulate, IOffersFilter, IOffer } from '../interfaces/IOffer';
+import { IOfferPopulate, IOffersFilter } from '../interfaces/IOffer';
 import Offer from '../models/Offer';
 
 export async function offerOne(req: Request) {
-
   const idOffer = req.query.id as string;
   const query = Offer.findById(idOffer);
   const offer = await query.populate('companyOwner', { name: 1 }).exec();
@@ -14,7 +13,7 @@ export async function offersList(req: Request) {
   // types of filtering
   const filterById = req.query.id as string;
   const filterByPosition = req.query.position as string;
-  const filterByPublicationDate = req.query.publicationData as string;
+  const filterByPublicationDate = req.query.publicationDate as string;
   const filterByDescription = req.query.description as string;
   const filterByCompanyOwner = req.query.companyOwner as string;
   const filterByStatus = req.query.status as string;
@@ -24,7 +23,7 @@ export async function offersList(req: Request) {
   const limit = req.query.limit as string | undefined;
 
   // sort
-  const sort = req.query.sort as string | undefined;
+  const sort = (req.query.sort as string) || '-publicationDate';
 
   // we create a filter object to introduce the filters that are passed to us for the query.
   const filter: IOffersFilter = {};
