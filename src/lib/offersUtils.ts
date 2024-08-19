@@ -1,6 +1,14 @@
 import { Request } from 'express';
-import { IOfferPopulate, IOffersFilter } from '../interfaces/IOffer';
+import { IOfferPopulate, IOffersFilter, IOffer } from '../interfaces/IOffer';
 import Offer from '../models/Offer';
+
+export async function offerOne(req: Request) {
+
+  const idOffer = req.query.id as string;
+  const query = Offer.findById(idOffer);
+  const offer = await query.populate('companyOwner', { name: 1 }).exec();
+  return offer;
+}
 
 export async function offersList(req: Request) {
   // types of filtering

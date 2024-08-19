@@ -43,6 +43,11 @@ OfferSchema.statics.listing = function (
   return query;
 };
 
+//Method for obtaining a specific offert for her id
+OfferSchema.statics.findById = function (id: string): Query<IOffer | null, IOffer> {
+  return this.findOne({ _id: id });
+};
+
 const Offer = mongoose.model<IOffer, IOfferModel>('Offer', OfferSchema);
 
 //module.exports = InternshipPosition;
