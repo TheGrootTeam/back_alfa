@@ -6,6 +6,7 @@ import offersRoutes from './offersRoutes';
 import myAdsRoutes from './myAdsRoutes';
 import loginRoutes from './loginRoutes';
 import registerRoutes from './registerRoutes';
+import profileRoutes from './profileRoutes';
 
 const api = express.Router();
 
@@ -14,6 +15,9 @@ api.use('/login', loginRoutes);
 
 // ---------------------- Register ----------------------------
 api.use('/register', registerRoutes);
+
+// --------------------- Profile Update -----------------------
+api.use('/profile', profileRoutes); 
 
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
