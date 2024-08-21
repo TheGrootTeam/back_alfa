@@ -2,7 +2,7 @@ import Offer from '../models/Offer';
 import { Request, Response, NextFunction } from 'express';
 
 export default class EditOfferController {
-  async put(req: Request, res: Response, next: NextFunction) {
+  async patch(req: Request, res: Response, next: NextFunction) {
 
     try {
       const updatedOffer = req.body;
@@ -16,6 +16,7 @@ export default class EditOfferController {
       }
 
       const filterIdOffer = { _id };
+      console.log('ID: ', filterIdOffer);
       const updateDataOffer = {
         $set: {
           position,
