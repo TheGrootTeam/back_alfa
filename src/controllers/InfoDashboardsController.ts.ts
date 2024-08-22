@@ -2,6 +2,8 @@ import { Response, NextFunction } from 'express';
 import { CustomRequest } from '../interfaces/IauthJWT';
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
+import Rol from '../models/Rol';
+import Skill from '../models/Skill';
 
 export default class InfoDashboardsController {
   async index(req: CustomRequest, res: Response, next: NextFunction) {
@@ -10,7 +12,13 @@ export default class InfoDashboardsController {
 
     try {
       if (applicantOrCompany === 'applicant') {
-        const applicantInfo = await Applicant.find({ _id: userId }, '-password');
+        const applicantInfo = await Applicant.find({ _id: userId }, '-password').populate([
+          {
+            path: 'wantedRol',
+            model: Rol
+          },
+          { path: 'mainSkills', model: Skill }
+        ]);
         if (applicantInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
           return;
@@ -23,6 +31,8 @@ export default class InfoDashboardsController {
           return;
         }
         res.status(200).json({ companyInfo });
+      } else {
+        res.status(404).json({ error: 'Invalid query parameter' });
       }
     } catch (error) {
       next(error);
