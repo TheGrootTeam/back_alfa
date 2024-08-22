@@ -10,6 +10,6 @@ const editOfferController = new EditOfferController();
 const offersRoutes = express.Router();
 offersRoutes.get('/', offersController.index);
 offersRoutes.post('/new', createOfferController.post);
-offersRoutes.put('/edit', editOfferController.put);
+offersRoutes.patch('/edit', editOfferController.patch);
 
 export default offersRoutes;
