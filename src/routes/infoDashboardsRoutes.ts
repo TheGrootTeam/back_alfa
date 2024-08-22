@@ -5,6 +5,6 @@ const infoDashboardsController = new InfoDashboardsController();
 
 const infoDashboardsRoutes = express.Router();
 
-infoDashboardsRoutes.get('/', infoDashboardsController.index);
+infoDashboardsRoutes.get('/:applicantOrCompany', infoDashboardsController.index);
 
 export default infoDashboardsRoutes;
