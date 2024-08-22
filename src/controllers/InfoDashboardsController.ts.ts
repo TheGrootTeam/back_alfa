@@ -15,9 +15,10 @@ export default class InfoDashboardsController {
         const applicantInfo = await Applicant.find({ _id: userId }, '-password').populate([
           {
             path: 'wantedRol',
-            model: Rol
+            model: Rol,
+            select: 'rol'
           },
-          { path: 'mainSkills', model: Skill }
+          { path: 'mainSkills', model: Skill, select: 'skill' }
         ]);
         if (applicantInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
