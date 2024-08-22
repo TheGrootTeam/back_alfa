@@ -16,9 +16,11 @@ export default class LoginController {
       //const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in tje test
       const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif });
       let userCompany: ICompany | null = null;
+      let isCompany = false;
       if (!userApplicant) {
         //userCompany = await Company.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in the test
         userCompany = await Company.findOne({ dniCif: dniCif });
+        isCompany = true;
       }
       const user = userApplicant ? userApplicant : userCompany;
 
@@ -39,7 +41,7 @@ export default class LoginController {
       }
 
       if (tokenJWT !== null) {
-        res.json({ tokenJWT: tokenJWT });
+        res.json({ tokenJWT: tokenJWT, isCompany:isCompany });
       }
       else {
         res.status(401).json({ error: 'Invalid credentials' });
