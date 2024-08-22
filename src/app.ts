@@ -16,7 +16,7 @@ import './lib/connectMongoose';
 
 const app = express();
 const apiVersion = process.env.API_VERSION;
-const allowedOrigins = ['http://localhost:3000', 'https://internit.tech/', 'http://internit.tech/'];
+const allowedOrigins = ['http://localhost:3000','http://localhost:5173', 'https://internit.tech/', 'http://internit.tech/'];
 
 app.use(
   cors({
