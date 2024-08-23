@@ -28,7 +28,7 @@ app.use(cors({
     }
     return callback(null, true);
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'], // Añadir más encabezados si es necesario
   credentials: true, // Si necesitas enviar cookies o autenticación
   preflightContinue: false, // Esto asegurará que no haya respuestas automáticas de preflight
