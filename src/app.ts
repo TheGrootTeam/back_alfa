@@ -16,25 +16,25 @@ import './lib/connectMongoose';
 
 const app = express();
 const apiVersion = process.env.API_VERSION;
-const allowedOrigins = ['http://localhost:3000', 'https://internit.tech/', 'http://internit.tech/'];
+//const allowedOrigins = ['http://localhost:3000', 'https://internit.tech/', 'http://internit.tech/'];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Permitir solicitudes sin origen (como las de curl)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'], // Añadir más encabezados si es necesario
-    credentials: true, // Si necesitas enviar cookies o autenticación
-    preflightContinue: false, // Esto asegurará que no haya respuestas automáticas de preflight
-    optionsSuccessStatus: 204 // Algunos navegadores (Safari) no aceptan el código de estado 204 en respuestas preflight
-  })
+app.use(cors()
+  // cors({
+  //   origin: function (origin, callback) {
+  //     // Permitir solicitudes sin origen (como las de curl)
+  //     if (!origin) return callback(null, true);
+  //     if (allowedOrigins.indexOf(origin) === -1) {
+  //       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+  //       return callback(new Error(msg), false);
+  //     }
+  //     return callback(null, true);
+  //   },
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  //   allowedHeaders: ['Content-Type', 'Authorization'], // Añadir más encabezados si es necesario
+  //   credentials: true, // Si necesitas enviar cookies o autenticación
+  //   preflightContinue: false, // Esto asegurará que no haya respuestas automáticas de preflight
+  //   optionsSuccessStatus: 204 // Algunos navegadores (Safari) no aceptan el código de estado 204 en respuestas preflight
+  // })
 );
 
 app.use(logger('dev'));
