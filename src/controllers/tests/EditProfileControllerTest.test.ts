@@ -63,11 +63,13 @@ describe('ProfileController', () => {
       );
       expect(Applicant.findOneAndUpdate).toHaveBeenCalledWith(
         { dniCif: '12345678A' },
-        expect.objectContaining({
-          name: 'Updated Name',
-          email: 'updatedemail@example.com',
-          phone: '999999999',
-        }),
+        {
+          $set: {
+            name: 'Updated Name',
+            email: 'updatedemail@example.com',
+            phone: '999999999',
+          },
+        },
         { new: true }
       );
     });
@@ -104,13 +106,15 @@ describe('ProfileController', () => {
       );
       expect(Company.findOneAndUpdate).toHaveBeenCalledWith(
         { dniCif: 'A000666' },
-        expect.objectContaining({
-          name: 'Updated Company Name',
-          email: 'updatedcompanyemail@example.com',
-          phone: '888888888',
-          ubication: 'New Location',
-          description: 'Updated description',
-        }),
+        {
+          $set: {
+            name: 'Updated Company Name',
+            email: 'updatedcompanyemail@example.com',
+            phone: '888888888',
+            ubication: 'New Location',
+            description: 'Updated description',
+          },
+        },
         { new: true }
       );
     });

@@ -1,4 +1,3 @@
-// src/controllers/RegisterController.ts
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
 import Sector from '../models/Sector'; // Import the Sector model
@@ -9,7 +8,6 @@ import { hashPassword } from '../lib/utils';
 async function getDefaultSectorId() {
   let defaultSector = await Sector.findOne({ sector: 'Default Sector' });
   if (!defaultSector) {
-    // If it doesn't exist, create a new one
     defaultSector = new Sector({ sector: 'Default Sector' });
     await defaultSector.save();
   }
@@ -26,15 +24,11 @@ export default class RegisterController {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
-      // Check if the applicant already exists
-      const applicantExists = await Applicant.findOne({ email });
-      if (applicantExists) {
-        return res.status(400).json({ message: 'User already exists' });
-      }
+      // Additional validation can be added here (e.g., validate email format)
 
-      // Check if the company already exists, only if the applicant doesn't exist
-      const companyExists = await Company.findOne({ email });
-      if (companyExists) {
+      // Check if the user already exists in either Applicant or Company
+      const existingUser = await Applicant.findOne({ email }) || await Company.findOne({ email });
+      if (existingUser) {
         return res.status(400).json({ message: 'User already exists' });
       }
 
@@ -46,16 +40,16 @@ export default class RegisterController {
         dniCif,
         password: hashedPassword,
         email,
-        name: 'Default Name', // default name
-        lastName: 'Default LastName', // default last name
-        phone: '0000000000', // default phone
-        photo: null, // default photo
-        cv: 'default_cv_url', // default CV URL
-        ubication: 'default_ubication', // default ubication
-        typeJob: 'presencial', // default job type
-        internType: 'renumerado', // default intern type
-        wantedRol: [], // Empty list or default role IDs
-        mainSkills: [], // Empty list or default skill IDs
+        name: 'Default Name', 
+        lastName: 'Default LastName', 
+        phone: '0000000000',
+        photo: null,
+        cv: 'default_cv_url',
+        ubication: 'default_ubication',
+        typeJob: 'presencial',
+        internType: 'renumerado',
+        wantedRol: [],
+        mainSkills: [],
         geographically_mobile: false,
         disponibility: false,
         preferredOffers: [],
@@ -68,12 +62,12 @@ export default class RegisterController {
         dniCif,
         password: hashedPassword,
         email,
-        name: 'Default Name', // default name
-        phone: '0000000000', // default phone
-        sector: defaultSectorId, // valid ObjectId
-        ubication: 'default_ubication', // default location
-        description: 'default_description', // default description
-        logo: 'default_logo_url' // default logo URL
+        name: 'Default Name',
+        phone: '0000000000',
+        sector: defaultSectorId,
+        ubication: 'default_ubication',
+        description: 'default_description',
+        logo: 'default_logo_url'
       };
 
       const user = isCompany

@@ -9,17 +9,16 @@ export default class ProfileController {
     try {
       const { dniCif, isCompany, ...updateData } = req.body;
 
-      if (!dniCif || isCompany === undefined) {
+      if (!dniCif || typeof isCompany !== 'boolean') {
         return res.status(400).json({ message: 'dniCif and isCompany fields are required' });
       }
 
-      // Use a union type to accommodate both models
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const model: Model<any> = isCompany ? Company : Applicant;
+      // Use the appropriate model based on isCompany flag
+      const model: Model<Document> = isCompany ? Company as unknown as Model<Document> : Applicant as unknown as Model<Document>;
 
       // Define the filter and update queries
       const filter: FilterQuery<Document> = { dniCif };
-      const update: UpdateQuery<Document> = updateData;
+      const update: UpdateQuery<Document> = { $set: updateData };
       const options: QueryOptions = { new: true };
 
       // Use "model.findOneAndUpdate" with the properly typed queries
