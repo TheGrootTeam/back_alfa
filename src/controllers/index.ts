@@ -1,9 +1,9 @@
 import OffersController from './OffersController';
 import LoginController from './LoginController';
-import MyAdsController from './MyAdsController';
+import InfoDashboardsController from './InfoDashboardsController.ts';
 
 export const controllers = {
-  MyAds: MyAdsController,
+  InfoDashboards: InfoDashboardsController,
   Login: LoginController,
   Offers: OffersController
 };

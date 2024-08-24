@@ -14,8 +14,7 @@
     "tsc": "tsc",
     "initDB": "ts-node initDB.ts",
     "initDBtest": "ts-node initDBtest.ts",
-    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js",
-    "builddev": "rimraf dist && tsc && cross-env NODEPOP_ENV=development DEBUG=back_alfa:* ts-node-dev src/bin/www.ts"
+    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

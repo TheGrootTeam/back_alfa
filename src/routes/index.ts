@@ -3,10 +3,11 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerOptions } from '../swagger.config';
 import offersRoutes from './offersRoutes';
-import myAdsRoutes from './myAdsRoutes';
+import infoDashboardsRoutes from './infoDashboardsRoutes';
 import loginRoutes from './loginRoutes';
 import registerRoutes from './registerRoutes';
 import profileRoutes from './profileRoutes';
+import authJWT from '../middlewares/authJWT';
 
 const api = express.Router();
 
@@ -22,8 +23,8 @@ api.use('/profile', profileRoutes);
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
 
-// ------------------------ MyAds -----------------------------
-api.use('/myAds', myAdsRoutes);
+// ------------------------ InfoDashboards -----------------------------
+api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {

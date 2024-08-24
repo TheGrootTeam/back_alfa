@@ -5,7 +5,7 @@ import jwt, { VerifyErrors } from 'jsonwebtoken';
 
 export default (req: CustomRequest, _res: Response, next: NextFunction) => {
   // token can be in the header, body or as query string
-  const tokenJWT = req.get('Authorization') || req.body.jwt || req.query.jwt;
+  const tokenJWT = req.headers['authorization'] || req.headers['Authorization'];
 
   // if there is no token throw error using http-errors
   if (!tokenJWT) {
