@@ -4,7 +4,7 @@ import { HttpError } from 'http-errors';
 import RegisterController from '../RegisterController';
 import Applicant from '../../models/Applicant';
 import Company from '../../models/Company';
-import Sector from '../../models/Sector'; // Importar el modelo Sector
+import Sector from '../../models/Sector';
 
 // Mocking the models
 jest.mock('../../models/Applicant');
@@ -36,23 +36,23 @@ describe('RegisterController', () => {
     jest.clearAllMocks();
 
     // Configurar el mock para Sector
-    (Sector.findOne as jest.Mock).mockResolvedValueOnce({
+    (Sector.findOne as jest.Mock).mockResolvedValue({
       _id: '60d9f2f8f8d9c9a2f8d9f2f8', // Un ObjectId simulado
       sector: 'Default Sector'
     });
 
     // Mock para el método save si es necesario crear un nuevo sector
-    (Sector.prototype.save as jest.Mock) = jest.fn().mockResolvedValue({});
+    (Sector.prototype.save as jest.Mock).mockResolvedValue({});
   });
 
   describe('POST /register', () => {
     it('should register a new applicant', async () => {
       // Set up the mock so that findOne returns null (user not found)
-      (Applicant.findOne as jest.Mock).mockResolvedValueOnce(null);
-      (Company.findOne as jest.Mock).mockResolvedValueOnce(null);
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      (Company.findOne as jest.Mock).mockResolvedValue(null);
 
       // Mock the save function of the prototype
-      const saveMock = jest.fn().mockResolvedValueOnce({});
+      const saveMock = jest.fn().mockResolvedValue({});
       (Applicant.prototype.save as jest.Mock) = saveMock;
 
       const res = await request(app)
@@ -76,11 +76,11 @@ describe('RegisterController', () => {
     });
 
     it('should register a new company', async () => {
-      (Applicant.findOne as jest.Mock).mockResolvedValueOnce(null);
-      (Company.findOne as jest.Mock).mockResolvedValueOnce(null);
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      (Company.findOne as jest.Mock).mockResolvedValue(null);
 
       // Mock the save function of the prototype
-      const saveMock = jest.fn().mockResolvedValueOnce({});
+      const saveMock = jest.fn().mockResolvedValue({});
       (Company.prototype.save as jest.Mock) = saveMock;
 
       const res = await request(app)
@@ -105,10 +105,9 @@ describe('RegisterController', () => {
 
     it('should not register a user with an existing email', async () => {
       // Set up the mock so that Applicant's findOne returns a user (email already exists)
-      (Applicant.findOne as jest.Mock).mockResolvedValueOnce({
+      (Applicant.findOne as jest.Mock).mockResolvedValue({
         email: 'existing@example.com',
       });
-      // We don't need to set up Company.findOne, because if Applicant.findOne finds something, Company.findOne should not be called.
 
       const res = await request(app)
         .post('/register')
@@ -140,5 +139,7 @@ describe('RegisterController', () => {
       expect(res.statusCode).toEqual(400);
       expect(res.body).toHaveProperty('message', 'All fields are required');
     });
+
+    // Additional tests can be added as needed
   });
 });
