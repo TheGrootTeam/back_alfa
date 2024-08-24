@@ -1,3 +1,4 @@
+import jwt from 'jsonwebtoken';
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
 import Sector from '../models/Sector'; // Import the Sector model
@@ -24,9 +25,7 @@ export default class RegisterController {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
-      // Additional validation can be added here (e.g., validate email format)
-
-      // Check if the user already exists in either Applicant or Company
+      // Check if the user already exists
       const existingUser = await Applicant.findOne({ email }) || await Company.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: 'User already exists' });
@@ -35,48 +34,49 @@ export default class RegisterController {
       // Password hash
       const hashedPassword = await hashPassword(password);
 
-      // Create a new user in the appropriate collection with default values
-      const defaultApplicantFields = {
-        dniCif,
-        password: hashedPassword,
-        email,
-        name: 'Default Name', 
-        lastName: 'Default LastName', 
-        phone: '0000000000',
-        photo: null,
-        cv: 'default_cv_url',
-        ubication: 'default_ubication',
-        typeJob: 'presencial',
-        internType: 'renumerado',
-        wantedRol: [],
-        mainSkills: [],
-        geographically_mobile: false,
-        disponibility: false,
-        preferredOffers: [],
-        suscribedOffers: []
-      };
-
       const defaultSectorId = await getDefaultSectorId();
 
-      const defaultCompanyFields = {
-        dniCif,
-        password: hashedPassword,
-        email,
-        name: 'Default Name',
-        phone: '0000000000',
-        sector: defaultSectorId,
-        ubication: 'default_ubication',
-        description: 'default_description',
-        logo: 'default_logo_url'
-      };
-
+      // Create a new user in the appropriate collection with default values
       const user = isCompany
-        ? new Company(defaultCompanyFields)
-        : new Applicant(defaultApplicantFields);
+        ? new Company({
+            dniCif,
+            password: hashedPassword,
+            email,
+            name: 'Default Name',
+            phone: '0000000000',
+            sector: defaultSectorId,
+            ubication: 'default_ubication',
+            description: 'default_description',
+            logo: 'default_logo_url',
+          })
+        : new Applicant({
+            dniCif,
+            password: hashedPassword,
+            email,
+            name: 'Default Name',
+            lastName: 'Default LastName',
+            phone: '0000000000',
+            photo: null,
+            cv: 'default_cv_url',
+            ubication: 'default_ubication',
+            typeJob: 'presencial',
+            internType: 'renumerado',
+            wantedRol: [],
+            mainSkills: [],
+            geographically_mobile: false,
+            disponibility: false,
+            preferredOffers: [],
+            suscribedOffers: [],
+          });
 
       await user.save();
 
-      return res.status(201).json({ message: 'User registered successfully' });
+      // Generate JWT
+      const token = jwt.sign({ userId: user._id, isCompany }, process.env.JWT_SECRET as string, {
+        expiresIn: '2h',
+      });
+
+      return res.status(201).json({ message: 'User registered successfully', token, isCompany });
     } catch (error) {
       console.error('Error in register:', error);
       if (!res.headersSent) {
