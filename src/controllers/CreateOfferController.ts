@@ -17,11 +17,6 @@ export default class CreateOfferController {
         return;
       }
 
-      //BALIZA - cod original
-      // await Offer.insertMany(newOffer);
-      // res.status(201).json({ message: 'Offer registered successfully' });
-
-
       // Create a new offer document
       const newOffer = new Offer({
         position,
@@ -37,11 +32,8 @@ export default class CreateOfferController {
 
       // Save the new offer to the database
       const savedOffer = await newOffer.save();
-
       // Return the saved offer
       return res.status(201).json(savedOffer);
-
-
 
     } catch (error) {
       res.status(500).json({ message: 'Internal server error' });

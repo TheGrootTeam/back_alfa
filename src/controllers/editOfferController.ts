@@ -16,7 +16,6 @@ export default class EditOfferController {
       }
 
       const filterIdOffer = { _id };
-      console.log('ID: ', filterIdOffer);
       const updateDataOffer = {
         $set: {
           position,
@@ -33,8 +32,13 @@ export default class EditOfferController {
         res.status(404).json({ message: 'Offer not update' });
         return;
       }
-      res.status(200).json({ message: 'Offer update succesfully' });
-
+      // Get the updated offer and return it later in the response
+      const updatedOfferData = await Offer.findById(_id);
+      if (!updatedOfferData) {
+        res.status(404).json({ message: 'Offer not found after update' });
+        return;
+      }
+      res.status(200).json(updatedOfferData);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error updating the offer' });
       next(error);
