@@ -30,8 +30,20 @@ export default class CreateOfferController {
         internJob
       });
 
+      //BALIZA
+      console.log('NEW OFFER:', newOffer);
+
       // Save the new offer to the database
-      const savedOffer = await newOffer.save();
+      let savedOffer = await newOffer.save();
+      //BALIZA
+      // Populate to obtain company´s name
+      savedOffer = await savedOffer.populate('companyOwner', '_id name');
+
+
+      //BALIZA
+      console.log('SAVED OFFER:', savedOffer);
+
+      //BALIZA
       // Return the saved offer
       return res.status(201).json(savedOffer);
 
