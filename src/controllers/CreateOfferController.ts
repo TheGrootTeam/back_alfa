@@ -31,7 +31,9 @@ export default class CreateOfferController {
       });
 
       // Save the new offer to the database
-      const savedOffer = await newOffer.save();
+      let savedOffer = await newOffer.save();
+      // Populate to obtain company´s name
+      savedOffer = await savedOffer.populate('companyOwner', '_id name');
       // Return the saved offer
       return res.status(201).json(savedOffer);
 
