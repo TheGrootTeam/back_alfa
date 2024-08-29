@@ -3,6 +3,7 @@ import Company from '../models/Company';
 import Sector from '../models/Sector';
 import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
+import mongoose from 'mongoose';
 
 async function getDefaultSectorId() {
   let defaultSector = await Sector.findOne({ sector: 'Default Sector' });
@@ -16,7 +17,7 @@ async function getDefaultSectorId() {
 export default class RegisterController {
   async register(req: Request, res: Response, _next: NextFunction) {
     try {
-      const { dniCif, password, isCompany, email } = req.body;
+      const { dniCif, password, isCompany, email, name, lastName, phone, cv, ubication, typeJob, internType, wantedRol, mainSkills, geographically_mobile, disponibility, description, logo } = req.body;
 
       if (!dniCif || !password || isCompany === undefined || !email) {
         return res.status(400).json({ message: 'All fields are required' });
@@ -42,31 +43,29 @@ export default class RegisterController {
             dniCif,
             password: hashedPassword,
             email,
-            name: 'Default Name',
-            phone: '0000000000',
+            name: name || 'Default Name',
+            phone: phone || '0000000000',
             sector: defaultSectorId,
-            ubication: 'default_ubication',
-            description: 'default_description',
-            logo: 'default_logo_url',
+            ubication: ubication || 'default_ubication',
+            description: description || 'default_description',
+            logo: logo || 'default_logo_url'
           })
         : new Applicant({
             dniCif,
             password: hashedPassword,
             email,
-            name: 'Default Name',
-            lastName: 'Default LastName',
-            phone: '0000000000',
+            name: name || 'Default Name',
+            lastName: lastName || 'Default LastName',
+            phone: phone || '0000000000',
             photo: null,
-            cv: 'default_cv_url',
-            ubication: 'default_ubication',
-            typeJob: 'presencial',
-            internType: 'renumerado',
-            wantedRol: [],
-            mainSkills: [],
-            geographically_mobile: false,
-            disponibility: false,
-            preferredOffers: [],
-            suscribedOffers: [],
+            cv: cv || 'default_cv_url',
+            ubication: ubication || 'default_ubication',
+            typeJob: typeJob || 'presencial',
+            internType: internType || 'renumerado',
+            wantedRol: wantedRol ? wantedRol.map((rol: string) => new mongoose.Types.ObjectId(rol)) : [],
+            mainSkills: mainSkills ? mainSkills.map((skill: string) => new mongoose.Types.ObjectId(skill)) : [],
+            geographically_mobile: geographically_mobile || false,
+            disponibility: disponibility || false,
           });
 
       await user.save();
