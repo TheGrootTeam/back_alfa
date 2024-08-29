@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
@@ -131,5 +132,109 @@ describe('RegisterController', () => {
       expect(res.body).toHaveProperty('message', 'CIF/NIF already exists');
       expect(Applicant.findOne).toHaveBeenCalledWith({ dniCif: '12345678A' });
     });
+
+    // Extended tests
+
+    it('should apply default values if optional fields are missing for Applicant', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      (Company.findOne as jest.Mock).mockResolvedValue(null);
+      const saveMock = jest.fn().mockResolvedValue({});
+      (Applicant.prototype.save as jest.Mock) = saveMock;
+
+      const res = await request(app)
+        .post('/register')
+        .send({
+          dniCif: '99999999A',
+          password: 'password123',
+          isCompany: false,
+          email: 'newapplicant@example.com',
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully');
+      expect(Applicant.findOne).toHaveBeenCalledWith({ email: 'newapplicant@example.com' });
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    it('should apply default values if optional fields are missing for Company', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      (Company.findOne as jest.Mock).mockResolvedValue(null);
+      const saveMock = jest.fn().mockResolvedValue({});
+      (Company.prototype.save as jest.Mock) = saveMock;
+
+      const res = await request(app)
+        .post('/register')
+        .send({
+          dniCif: '99999999B',
+          password: 'password123',
+          isCompany: true,
+          email: 'newcompany@example.com',
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully');
+      expect(Company.findOne).toHaveBeenCalledWith({ email: 'newcompany@example.com' });
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    it('should handle arrays for wantedRol and mainSkills correctly', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      const saveMock = jest.fn().mockResolvedValue({});
+      (Applicant.prototype.save as jest.Mock) = saveMock;
+
+      const res = await request(app)
+        .post('/register')
+        .send({
+          dniCif: '88888888A',
+          password: 'password123',
+          isCompany: false,
+          email: 'anotherapplicant@example.com',
+          wantedRol: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()],
+          mainSkills: [new mongoose.Types.ObjectId(), new mongoose.Types.ObjectId()]
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully');
+      expect(Applicant.findOne).toHaveBeenCalledWith({ email: 'anotherapplicant@example.com' });
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    it('should handle multiple values in typeJob and internType for Applicant', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValue(null);
+      const saveMock = jest.fn().mockResolvedValue({});
+      (Applicant.prototype.save as jest.Mock) = saveMock;
+
+      const res = await request(app)
+        .post('/register')
+        .send({
+          dniCif: '77777777A',
+          password: 'password123',
+          isCompany: false,
+          email: 'applicantwithmultiplejobs@example.com',
+          typeJob: ['presencial', 'teletrabajo'],
+          internType: ['renumerado', 'voluntariado'],
+        });
+
+      expect(res.statusCode).toEqual(201);
+      expect(res.body).toHaveProperty('message', 'User registered successfully');
+      expect(Applicant.findOne).toHaveBeenCalledWith({ email: 'applicantwithmultiplejobs@example.com' });
+      expect(saveMock).toHaveBeenCalled();
+    });
+
+    it('should return 400 if email already exists for Applicant', async () => {
+      (Applicant.findOne as jest.Mock).mockResolvedValue({ email: 'existing@example.com' });
+      const res = await request(app)
+        .post('/register')
+        .send({
+          dniCif: '12345678A',
+          password: 'password123',
+          isCompany: false,
+          email: 'existing@example.com',
+        });
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('message', 'User already exists');
+    });
+
   });
 });
