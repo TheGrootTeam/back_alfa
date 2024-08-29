@@ -7,7 +7,8 @@ export default class EditOfferController {
     try {
       const updatedOffer = req.body;
       //const { _id, position, description, status, numberVacancies, location, typeJob, internJob } = req.body;
-      const { _id, position, description, status, numberVacancies, location, typeJob, internJob } = updatedOffer;
+      const { companyOwner, position, description, status, numberVacancies, location, typeJob, internJob } = updatedOffer;
+      const _id: string = req.body.id;
 
       //Validate the updated fields 
       if (!_id || !position || !description || status === null || !numberVacancies || !location || !typeJob || !internJob) {
@@ -16,9 +17,9 @@ export default class EditOfferController {
       }
 
       const filterIdOffer = { _id };
-      console.log('ID: ', filterIdOffer);
       const updateDataOffer = {
         $set: {
+          companyOwner,
           position,
           description,
           status,
@@ -33,8 +34,15 @@ export default class EditOfferController {
         res.status(404).json({ message: 'Offer not update' });
         return;
       }
-      res.status(200).json({ message: 'Offer update succesfully' });
+      // Get the updated offer (using populate) and return it later in the response
+      const updatedOfferData = await Offer.findById(_id)
+        .populate('companyOwner', '_id name');
 
+      if (!updatedOfferData) {
+        res.status(404).json({ message: 'Offer not found after update' });
+        return;
+      }
+      res.status(200).json(updatedOfferData);
     } catch (error) {
       res.status(500).json({ message: 'Internal server error updating the offer' });
       next(error);

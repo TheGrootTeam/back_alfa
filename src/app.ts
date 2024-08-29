@@ -16,7 +16,13 @@ import './lib/connectMongoose';
 
 const app = express();
 const apiVersion = process.env.API_VERSION;
-const allowedOrigins = ['http://localhost:3000', 'https://internit.tech/', 'http://internit.tech/'];
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://internit.tech/',
+  'http://internit.tech/',
+  'http://localhost'
+];
 
 app.use(
   cors({
@@ -29,7 +35,7 @@ app.use(
       }
       return callback(null, true);
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'], // Añadir más encabezados si es necesario
     credentials: true, // Si necesitas enviar cookies o autenticación
     preflightContinue: false, // Esto asegurará que no haya respuestas automáticas de preflight
