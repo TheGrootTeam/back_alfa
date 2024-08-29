@@ -12,7 +12,10 @@ export default class ProfileController {
 
     try {
       if (applicantOrCompany === 'applicant') {
-        const applicantInfo = await Applicant.find({ _id: userId }, '-password -dniCif -geographically_mobile -preferredOffers -suscribedOffers').populate([
+        const applicantInfo = await Applicant.find(
+          { _id: userId },
+          '-password -dniCif -geographically_mobile -preferredOffers -suscribedOffers'
+        ).populate([
           {
             path: 'wantedRol',
             model: Rol,
