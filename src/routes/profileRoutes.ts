@@ -1,10 +1,12 @@
 import express from 'express';
-import ProfileController from '../controllers/EditProfileController';
+import EditProfileController from '../controllers/EditProfileController';
+import ProfileController from '../controllers/ProfileController';
 
 
-const router = express.Router();
-const profileController = new ProfileController();
+const profileRoutes = express.Router();
+const editprofileController = new EditProfileController();
 
-router.put('/update', (req, res, next) => profileController.updateProfile(req, res, next));
+profileRoutes.get('/:applicantOrCompany/:id', ProfileController.index);
+profileRoutes.put('/update', (req, res, next) => editprofileController.updateProfile(req, res, next));
 
-export default router;
+export default profileRoutes;
