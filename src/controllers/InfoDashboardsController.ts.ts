@@ -3,7 +3,9 @@ import { CustomRequest } from '../interfaces/IauthJWT';
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
 import Rol from '../models/Rol';
+import Offer from '../models/Offer';
 import Skill from '../models/Skill';
+import Sector from '../models/Sector';
 
 export default class InfoDashboardsController {
   async index(req: CustomRequest, res: Response, next: NextFunction) {
@@ -26,11 +28,24 @@ export default class InfoDashboardsController {
         }
         res.status(200).json({ applicantInfo });
       } else if (applicantOrCompany === 'company') {
-        const companyInfo = await Company.find({ _id: userId }, '-password');
+        const companyInfo = await Company.find({ _id: userId }, '-password').populate([
+          {
+            path: 'sector',
+            model: Sector,
+            select: 'sector'
+          },
+          {
+            path: 'publishedOffers',
+            model: Offer,
+            select: 'position status'
+          }
+        ]);
         if (companyInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
           return;
         }
+        //BALIZA
+        console.log('companyInfo -->', companyInfo);
         res.status(200).json({ companyInfo });
       } else {
         res.status(404).json({ error: 'Invalid query parameter' });
