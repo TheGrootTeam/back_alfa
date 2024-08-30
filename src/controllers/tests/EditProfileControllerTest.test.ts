@@ -1,7 +1,7 @@
 import request from 'supertest';
 import express, { Request, Response, NextFunction } from 'express';
 import { HttpError } from 'http-errors';
-import ProfileController from '../EditProfileController';
+import EditProfileController from '../EditProfileController';
 import Applicant from '../../models/Applicant';
 import Company from '../../models/Company';
 
@@ -14,9 +14,9 @@ const app = express();
 app.use(express.json());
 
 // Instantiate the controller and define the route
-const profileController = new ProfileController();
+const editprofileController = new EditProfileController();
 app.put('/profile/update', (req: Request, res: Response, next: NextFunction) =>
-  profileController.updateProfile(req, res, next)
+  editprofileController.updateProfile(req, res, next)
 );
 
 // Error handling middleware
@@ -29,7 +29,7 @@ app.use(
 
 jest.setTimeout(10000); // Incrementa el tiempo de espera a 10 segundos
 
-describe('ProfileController', () => {
+describe('EditProfileController', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
