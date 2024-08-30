@@ -7,7 +7,7 @@ const profileRoutes = express.Router();
 const editprofileController = new EditProfileController();
 const profileController = new ProfileController();
 
-profileRoutes.get('/:applicantOrCompany/:id', profileController.index);
+profileRoutes.get('/:applicantOrCompany/:userId', profileController.index);
 profileRoutes.put('/update', (req, res, next) => editprofileController.updateProfile(req, res, next));
 
 export default profileRoutes;
