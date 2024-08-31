@@ -1,20 +1,21 @@
 import { Response, NextFunction } from 'express';
-import { CustomRequest } from '../interfaces/IauthJWT';
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
 import Rol from '../models/Rol';
-import Offer from '../models/Offer';
 import Skill from '../models/Skill';
-import Sector from '../models/Sector';
+import { ParamsProfileController } from '../interfaces/IParams';
 
-export default class InfoDashboardsController {
-  async index(req: CustomRequest, res: Response, next: NextFunction) {
-    const userId = req.apiUserId;
+export default class ProfileController {
+  async index(req: ParamsProfileController, res: Response, next: NextFunction) {
+    const userId = req.params.userId;
     const applicantOrCompany = req.params.applicantOrCompany;
 
     try {
       if (applicantOrCompany === 'applicant') {
-        const applicantInfo = await Applicant.find({ _id: userId }, '-password').populate([
+        const applicantInfo = await Applicant.find(
+          { _id: userId },
+          '-password -dniCif -geographically_mobile -preferredOffers -suscribedOffers'
+        ).populate([
           {
             path: 'wantedRol',
             model: Rol,
@@ -28,24 +29,11 @@ export default class InfoDashboardsController {
         }
         res.status(200).json({ applicantInfo });
       } else if (applicantOrCompany === 'company') {
-        const companyInfo = await Company.find({ _id: userId }, '-password').populate([
-          {
-            path: 'sector',
-            model: Sector,
-            select: 'sector'
-          },
-          {
-            path: 'publishedOffers',
-            model: Offer,
-            select: 'position status'
-          }
-        ]);
+        const companyInfo = await Company.find({ _id: userId }, '-password -dniCif');
         if (companyInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
           return;
         }
-        //BALIZA
-        console.log('companyInfo -->', companyInfo);
         res.status(200).json({ companyInfo });
       } else {
         res.status(404).json({ error: 'Invalid query parameter' });
@@ -54,6 +42,4 @@ export default class InfoDashboardsController {
       next(error);
     }
   }
-
-  // res.json({ companyId, applicantOrCompany });
 }

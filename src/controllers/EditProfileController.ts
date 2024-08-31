@@ -3,7 +3,7 @@ import Company from '../models/Company';
 import { Request, Response, NextFunction } from 'express';
 import { Document, FilterQuery, UpdateQuery, QueryOptions, Model } from 'mongoose';
 
-export default class ProfileController {
+export default class EditProfileController {
   // Method for updating the profile
   async updateProfile(req: Request, res: Response, _next: NextFunction) {
     try {
