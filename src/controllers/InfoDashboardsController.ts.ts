@@ -46,6 +46,7 @@ export default class InfoDashboardsController {
         }
         //BALIZA
         console.log('companyInfo -->', companyInfo);
+
         res.status(200).json({ companyInfo });
       } else {
         res.status(404).json({ error: 'Invalid query parameter' });
