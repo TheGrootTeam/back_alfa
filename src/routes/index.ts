@@ -8,6 +8,7 @@ import loginRoutes from './loginRoutes';
 import registerRoutes from './registerRoutes';
 import profileRoutes from './profileRoutes';
 import authJWT from '../middlewares/authJWT';
+import authRoutes from './authRoutes';
 
 const api = express.Router();
 
@@ -17,8 +18,11 @@ api.use('/login', loginRoutes);
 // ---------------------- Register ----------------------------
 api.use('/register', registerRoutes);
 
+// ---------------------- Auth --------------------------------
+api.use('/auth', authJWT, authRoutes);
+
 // --------------------- Profile Update -----------------------
-api.use('/profile', profileRoutes); 
+api.use('/profile', profileRoutes);
 
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
