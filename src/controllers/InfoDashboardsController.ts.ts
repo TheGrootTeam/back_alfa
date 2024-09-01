@@ -37,15 +37,15 @@ export default class InfoDashboardsController {
           {
             path: 'publishedOffers',
             model: Offer,
-            select: 'position status'
+            select: 'position location status'
           }
         ]);
+
         if (companyInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
           return;
         }
-        //BALIZA
-        console.log('companyInfo -->', companyInfo);
+
         res.status(200).json({ companyInfo });
       } else {
         res.status(404).json({ error: 'Invalid query parameter' });
