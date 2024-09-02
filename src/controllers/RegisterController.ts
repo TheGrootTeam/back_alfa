@@ -3,11 +3,9 @@ import Company from '../models/Company';
 import Sector from '../models/Sector';
 import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
-import mongoose, { Types } from 'mongoose';
-import { IApplicant, IApplicantEx } from '../interfaces/IApplicant';
-import { ICompany, ICompanyEx } from '../interfaces/ICompany';
+import mongoose from 'mongoose';
 
-async function getDefaultSectorId(): Promise<Types.ObjectId> {
+async function getDefaultSectorId() {
   let defaultSector = await Sector.findOne({ sector: 'Default Sector' });
   if (!defaultSector) {
     defaultSector = new Sector({ sector: 'Default Sector' });
@@ -16,92 +14,66 @@ async function getDefaultSectorId(): Promise<Types.ObjectId> {
   return defaultSector._id;
 }
 
-async function validateUserData(dniCif: string) {
-  const existingDniCif = await Applicant.findOne({ dniCif }) || await Company.findOne({ dniCif });
-  if (existingDniCif) {
-    throw new Error('CIF/NIF already exists');
-  }
-}
-
-async function createApplicant(data: IApplicantEx): Promise<IApplicant> {
-  const hashedPassword = await hashPassword(data.password);
-  
-  const validWantedRol = data.wantedRol.filter(rol => mongoose.Types.ObjectId.isValid(rol)).map(rol => new mongoose.Types.ObjectId(rol));
-  const validMainSkills = data.mainSkills.filter(skill => mongoose.Types.ObjectId.isValid(skill)).map(skill => new mongoose.Types.ObjectId(skill));
-
-  const applicant = new Applicant({
-    ...data,
-    password: hashedPassword,
-    wantedRol: validWantedRol,
-    mainSkills: validMainSkills,
-  });
-
-  await applicant.save();
-  return applicant.toObject() as IApplicant;
-}
-
-async function createCompany(data: ICompanyEx): Promise<ICompany> {
-  const hashedPassword = await hashPassword(data.password);
-  const company = new Company({
-    ...data,
-    password: hashedPassword,
-    sector: new mongoose.Types.ObjectId(data.sector),
-  });
-  await company.save();
-  return company.toObject() as ICompany;
-}
-
 export default class RegisterController {
   async register(req: Request, res: Response, _next: NextFunction) {
     try {
-      const { isCompany, ...userData } = req.body;
+      const { dniCif, password, isCompany, email, name, lastName, phone, cv, ubication, typeJob, internType, wantedRol, mainSkills, geographically_mobile, disponibility, description, logo } = req.body;
 
-      if (!userData.dniCif || !userData.password || isCompany === undefined || !userData.email) {
+      if (!dniCif || !password || isCompany === undefined || !email) {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
-      // Validar el dniCif para evitar duplicados
-      await validateUserData(userData.dniCif);
-
-      if (isCompany) {
-        const companyData: ICompanyEx = {
-          ...userData,
-          sector: await getDefaultSectorId(),
-          name: userData.name || 'Default Company Name',
-          phone: userData.phone || '0000000000',
-          ubication: userData.ubication || 'default_ubication',
-          description: userData.description || 'default_description',
-          logo: userData.logo || 'default_logo_url',
-        };
-        await createCompany(companyData);
-      } else {
-        const applicantData: IApplicantEx = {
-          ...userData,
-          name: userData.name || 'Default Name',
-          lastName: userData.lastName || 'Default LastName',
-          phone: userData.phone || '0000000000',
-          photo: userData.photo,
-          cv: userData.cv || 'default_cv_url',
-          ubication: userData.ubication || 'default_ubication',
-          role: userData.role || 'default_role',
-          typeJob: userData.typeJob || 'presencial',
-          internType: userData.internType || 'renumerado',
-          wantedRol: userData.wantedRol || [],
-          mainSkills: userData.mainSkills || [],
-          geographically_mobile: userData.geographically_mobile || false,
-          disponibility: userData.disponibility || false,
-        };
-        await createApplicant(applicantData);
+      // Check if the email already exists in both Applicant and Company collections
+      const existingEmail = await Applicant.findOne({ email }) || await Company.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).json({ message: 'User already exists' });
       }
+
+      // Check if the dniCif already exists in both Applicant and Company collections
+      const existingDniCif = await Applicant.findOne({ dniCif }) || await Company.findOne({ dniCif });
+      if (existingDniCif) {
+        return res.status(400).json({ message: 'CIF/NIF already exists' });
+      }
+
+      const hashedPassword = await hashPassword(password);
+      const defaultSectorId = await getDefaultSectorId();
+
+      const user = isCompany
+        ? new Company({
+            dniCif,
+            password: hashedPassword,
+            email,
+            name: name || 'Default Name',
+            phone: phone || '0000000000',
+            sector: defaultSectorId,
+            ubication: ubication || 'default_ubication',
+            description: description || 'default_description',
+            logo: logo || 'default_logo_url'
+          })
+        : new Applicant({
+            dniCif,
+            password: hashedPassword,
+            email,
+            name: name || 'Default Name',
+            lastName: lastName || 'Default LastName',
+            phone: phone || '0000000000',
+            photo: null,
+            cv: cv || 'default_cv_url',
+            ubication: ubication || 'default_ubication',
+            typeJob: typeJob || 'presencial',
+            internType: internType || 'renumerado',
+            wantedRol: wantedRol ? wantedRol.map((rol: string) => mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null).filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null) : [],
+            mainSkills: mainSkills ? mainSkills.map((skill: string) => mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null).filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null) : [],
+            geographically_mobile: geographically_mobile || false,
+            disponibility: disponibility || false,
+          });
+
+      await user.save();
 
       return res.status(201).json({ message: 'User registered successfully' });
 
     } catch (error) {
-      console.error('Error in register:', error as Error);
-      const err = error as Error;
-      if (err.message === 'CIF/NIF already exists') {
-        return res.status(400).json({ message: err.message });
-      }
+      console.error('Error in register:', error);
       if (!res.headersSent) {
         return res.status(500).json({ message: 'Internal server error' });
       }
