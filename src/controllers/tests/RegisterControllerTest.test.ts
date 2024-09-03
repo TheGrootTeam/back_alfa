@@ -52,7 +52,7 @@ describe('RegisterController', () => {
           isCompany: false,
           email: 'applicant@example.com',
           wantedRol: ['rol1', 'rol2'],
-          mainSkills: ['skill1', 'skill2']
+          mainSkills: ['skill1', 'skill2'],
         });
 
       expect(res.statusCode).toEqual(201);
@@ -96,8 +96,8 @@ describe('RegisterController', () => {
         });
 
       expect(res.statusCode).toEqual(400);
-      expect(res.body).toHaveProperty('message', 'CIF/NIF already exists');
-      expect(Applicant.findOne).toHaveBeenCalledWith({ dniCif: '12345678A' });
+      expect(res.body).toHaveProperty('message', 'User already exists');
+      expect(Applicant.findOne).toHaveBeenCalledWith({ email: 'unique-email@example.com' });
     });
 
     it('should return 400 if required fields are missing', async () => {
