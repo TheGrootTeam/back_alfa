@@ -4,6 +4,8 @@ import Company from '../models/Company';
 import Rol from '../models/Rol';
 import Skill from '../models/Skill';
 import { ParamsProfileController } from '../interfaces/IParams';
+import Offer from '../models/Offer';
+import Sector from '../models/Sector';
 
 export default class ProfileController {
   async index(req: ParamsProfileController, res: Response, next: NextFunction) {
@@ -29,7 +31,19 @@ export default class ProfileController {
         }
         res.status(200).json({ applicantInfo });
       } else if (applicantOrCompany === 'company') {
-        const companyInfo = await Company.find({ _id: userId }, '-password -dniCif');
+        const companyInfo = await Company.find({ _id: userId }, '-password -dniCif').populate([
+          {
+            path: 'publishedOffers',
+            model: Offer,
+            select:
+              'position description internJob numberApplicants typeJob companyOwner location numberVacancies status publicationDate'
+          },
+          {
+            path: 'sector',
+            model: Sector,
+            select: 'sector'
+          }
+        ]);
         if (companyInfo.length === 0) {
           res.status(404).json({ error: 'Resource not found' });
           return;
