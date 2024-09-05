@@ -13,28 +13,31 @@ export default class OffersController {
       next(error);
     }
   }
-  async delete(req: CustomRequest, _res: Response, next: NextFunction) {
+
+  async delete(req: CustomRequest, res: Response, next: NextFunction) {
     const offerId = req.body.offerId;
     const company = req.apiUserId;
+    try {
+      // get the offer
+      const offer = await Offer.findById(offerId);
 
-    // get the offer
-    const offer = await Offer.findById(offerId);
+      // verify if offer exist
+      if (!offer) {
+        next(createError(404, 'Offer not found'));
+        return;
+      }
 
-    // verify if offer exist
-    if (!offer) {
-      next(createError(404, 'Offer not found'));
-      return;
+      // verify user is offer owner
+      const offerOwner = offer?.companyOwner._id.toString();
+      if (offerOwner !== company) {
+        next(createError(401, "You aren't the owner of the offer"));
+        return;
+      }
+
+      await Offer.deleteOne({ _id: offerId });
+      res.status(200).json({ message: `Offer ${offerId} deleted` });
+    } catch (error) {
+      next(error);
     }
-    //
-
-    // verify user is offer owner
-    const offerOwner = offer?.companyOwner._id.toString();
-    if (offerOwner !== company) {
-      next(createError(401, "You aren't the owner of the offer"));
-      return;
-    }
-
-    console.log(offerId, company, offer);
-    next(createError(401, 'Invalid delete'));
   }
 }
