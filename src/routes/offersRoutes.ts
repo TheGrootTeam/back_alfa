@@ -12,5 +12,6 @@ const offersRoutes = express.Router();
 offersRoutes.get('/', offersController.index);
 offersRoutes.post('/new', authJWT, createOfferController.post);
 offersRoutes.patch('/edit', authJWT, editOfferController.patch);
+offersRoutes.post('/delete', authJWT, offersController.delete);
 
 export default offersRoutes;
