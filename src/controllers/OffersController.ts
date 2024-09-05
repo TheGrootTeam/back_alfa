@@ -20,6 +20,13 @@ export default class OffersController {
     // get the offer
     const offer = await Offer.findById(offerId);
 
+    // verify if offer exist
+    if (!offer) {
+      next(createError(404, 'Offer not found'));
+      return;
+    }
+    //
+
     // verify user is offer owner
     const offerOwner = offer?.companyOwner._id.toString();
     if (offerOwner !== company) {
