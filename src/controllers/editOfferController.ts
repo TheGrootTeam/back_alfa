@@ -44,7 +44,7 @@ export default class EditOfferController {
       }
       res.status(200).json(updatedOfferData);
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error updating the offer' });
+      console.log({ message: 'Internal server error updating the offer [editOfferController]' });
       next(error);
     }
   }
