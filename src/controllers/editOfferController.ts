@@ -1,12 +1,12 @@
 import Offer from '../models/Offer';
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { CustomRequest } from '../interfaces/IauthJWT';
 
 export default class EditOfferController {
-  async patch(req: Request, res: Response, next: NextFunction) {
-
+  //CustomRequest extends Request
+  async patch(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const updatedOffer = req.body;
-      //const { _id, position, description, status, numberVacancies, location, typeJob, internJob } = req.body;
       const { companyOwner, position, description, status, numberVacancies, location, typeJob, internJob } = updatedOffer;
       const _id: string = req.body.id;
 
@@ -14,6 +14,15 @@ export default class EditOfferController {
       if (!_id || !position || !description || status === null || !numberVacancies || !location || !typeJob || !internJob) {
         res.status(400).json({ message: 'There are modified fields that are empty' });
         return;
+      }
+
+      //Check the existance of the offer and the user is owner of the offer
+      const offer = await Offer.findById(_id);
+      if (!offer) {
+        return res.status(404).json({ message: 'Offer not found' });
+      }
+      if (companyOwner._id !== req.apiUserId) {
+        return res.status(403).json({ message: 'You are not authorized to edit this offer' });
       }
 
       const filterIdOffer = { _id };
@@ -44,7 +53,7 @@ export default class EditOfferController {
       }
       res.status(200).json(updatedOfferData);
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error updating the offer' });
+      console.log({ message: 'Internal server error updating the offer [editOfferController]' });
       next(error);
     }
   }

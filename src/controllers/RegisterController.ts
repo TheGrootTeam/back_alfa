@@ -1,11 +1,10 @@
-import jwt from 'jsonwebtoken';
 import Applicant from '../models/Applicant';
 import Company from '../models/Company';
-import Sector from '../models/Sector'; // Import the Sector model
+import Sector from '../models/Sector';
 import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
+import mongoose from 'mongoose';
 
-// Function to get the ObjectId of the default sector
 async function getDefaultSectorId() {
   let defaultSector = await Sector.findOne({ sector: 'Default Sector' });
   if (!defaultSector) {
@@ -18,65 +17,91 @@ async function getDefaultSectorId() {
 export default class RegisterController {
   async register(req: Request, res: Response, _next: NextFunction) {
     try {
-      const { dniCif, password, isCompany, email } = req.body;
+      const {
+        dniCif,
+        password,
+        isCompany,
+        email,
+        name,
+        lastName,
+        phone,
+        cv,
+        photo,
+        ubication,
+        typeJob,
+        internType,
+        wantedRol,
+        mainSkills,
+        geographically_mobile,
+        disponibility,
+        description,
+        logo
+      } = req.body;
 
-      // Validate required fields
       if (!dniCif || !password || isCompany === undefined || !email) {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
-      // Check if the user already exists
-      const existingUser = await Applicant.findOne({ email }) || await Company.findOne({ email });
-      if (existingUser) {
+      // Check if the email already exists in both Applicant and Company collections
+      const existingEmail = (await Applicant.findOne({ email })) || (await Company.findOne({ email }));
+      if (existingEmail) {
         return res.status(400).json({ message: 'User already exists' });
       }
 
-      // Password hash
-      const hashedPassword = await hashPassword(password);
+      // Check if the dniCif already exists in both Applicant and Company collections
+      const existingDniCif = (await Applicant.findOne({ dniCif })) || (await Company.findOne({ dniCif }));
+      if (existingDniCif) {
+        return res.status(400).json({ message: 'CIF/NIF already exists' });
+      }
 
+      const hashedPassword = await hashPassword(password);
       const defaultSectorId = await getDefaultSectorId();
 
-      // Create a new user in the appropriate collection with default values
       const user = isCompany
         ? new Company({
             dniCif,
             password: hashedPassword,
             email,
-            name: 'Default Name',
-            phone: '0000000000',
+            name: name || 'Default Name',
+            phone: phone || '0000000000',
             sector: defaultSectorId,
-            ubication: 'default_ubication',
-            description: 'default_description',
-            logo: 'default_logo_url',
+            ubication: ubication || 'default_ubication',
+            description: description || 'default_description',
+            logo: logo || 'default_logo_url'
           })
         : new Applicant({
             dniCif,
             password: hashedPassword,
             email,
-            name: 'Default Name',
-            lastName: 'Default LastName',
-            phone: '0000000000',
-            photo: null,
-            cv: 'default_cv_url',
-            ubication: 'default_ubication',
-            typeJob: 'presencial',
-            internType: 'renumerado',
-            wantedRol: [],
-            mainSkills: [],
-            geographically_mobile: false,
-            disponibility: false,
-            preferredOffers: [],
-            suscribedOffers: [],
+            name: name || 'Default Name',
+            lastName: lastName || 'Default LastName',
+            phone: phone || '0000000000',
+            photo: photo || 'default_photo_url',
+            cv: cv || 'default_cv_url',
+            ubication: ubication || 'default_ubication',
+            typeJob: typeJob || 'presencial',
+            internType: internType || 'renumerado',
+            wantedRol: wantedRol
+              ? wantedRol
+                  .map((rol: string) =>
+                    mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null
+                  )
+                  .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+              : [],
+            mainSkills: mainSkills
+              ? mainSkills
+                  .map((skill: string) =>
+                    mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null
+                  )
+                  .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+              : [],
+            geographically_mobile: geographically_mobile || false,
+            disponibility: disponibility || false
           });
 
       await user.save();
 
-      // Generate JWT
-      const token = jwt.sign({ userId: user._id, isCompany }, process.env.JWT_SECRET as string, {
-        expiresIn: '2h',
-      });
-
-      return res.status(201).json({ message: 'User registered successfully', token, isCompany });
+      return res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
       console.error('Error in register:', error);
       if (!res.headersSent) {
