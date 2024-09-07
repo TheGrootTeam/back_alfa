@@ -10,6 +10,7 @@ import profileRoutes from './profileRoutes';
 import authJWT from '../middlewares/authJWT';
 import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
+import passwordRoutes from './passwordRoutes';
 
 const api = express.Router();
 
@@ -27,6 +28,9 @@ api.use('/profile', profileRoutes);
 
 // --------------------- Delete Profile ------------------------
 api.use('/delete-profile', deleteProfileRoutes);
+
+// ---------------------- Change Password ---------------------
+api.use('/changePassword', authJWT, passwordRoutes);
 
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
