@@ -6,12 +6,12 @@ import { CustomRequest } from '../interfaces/IauthJWT';
 import createError from 'http-errors';
 
 export default class DeleteProfileController {
-  // Eliminar el perfil del usuario autenticado
+  // Delete the authenticated user profile
   async deleteProfile(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.apiUserId;
 
-      // Intentamos encontrar el perfil de la compañía o el solicitante
+      // We try to find the company's profile or the applicant
       const company = await Company.findById(userId);
       const applicant = await Applicant.findById(userId);
 
@@ -20,19 +20,19 @@ export default class DeleteProfileController {
       }
 
       if (company) {
-        // Eliminar ofertas asociadas a la empresa
-        await Offer.deleteMany({ company: company._id });
+        // Delete offers associated with the company
+        await Offer.deleteMany({ companyOwner: company._id });
 
-        // Eliminar el perfil de la compañía
+        // Delete the company profile
         await Company.findByIdAndDelete(company._id);
       } else if (applicant) {
-        // Eliminar suscripciones del solicitante
+        // Delete subscriptions from the applicant
         await Applicant.updateMany(
           { _id: applicant._id },
           { $pull: { suscribedOffers: { $in: applicant.suscribedOffers } } }
         );
 
-        // Eliminar el perfil del solicitante
+        // Delete the applicant's profile
         await Applicant.findByIdAndDelete(applicant._id);
       }
 
