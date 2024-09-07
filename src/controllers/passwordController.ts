@@ -1,12 +1,12 @@
 import { Response, NextFunction } from 'express';
 import createError from 'http-errors';
 import Company from '../models/Company';
-import { CustomRequest } from '../interfaces/IauthJWT';
 import Applicant from '../models/Applicant';
 import { comparePassword, hashPassword } from '../lib/utils';
+import { IChangePasswordBody } from '../interfaces/IPassword';
 
 export default class PasswordController {
-  async change(req: CustomRequest, res: Response, next: NextFunction) {
+  async change(req: IChangePasswordBody, res: Response, next: NextFunction) {
     try {
       const userId = req.apiUserId;
       const { currentPassword, newPassword, confirmNewPassword, isCompany } = req.body;
