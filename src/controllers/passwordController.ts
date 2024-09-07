@@ -31,7 +31,7 @@ export default class PasswordController {
         const comparedPassword = await comparePassword(currentPassword, password);
 
         if (!comparedPassword) {
-          next(createError(400, 'Current password not correct'));
+          next(createError(403, 'Current password not correct'));
           return;
         }
 
@@ -54,7 +54,7 @@ export default class PasswordController {
         const comparedPassword = await comparePassword(currentPassword, password);
 
         if (!comparedPassword) {
-          next(createError(400, 'Current password not correct'));
+          next(createError(403, 'Current password not correct'));
           return;
         }
 
