@@ -9,6 +9,7 @@ import registerRoutes from './registerRoutes';
 import profileRoutes from './profileRoutes';
 import authJWT from '../middlewares/authJWT';
 import authRoutes from './authRoutes';
+import passwordRoutes from './passwordRoutes';
 
 const api = express.Router();
 
@@ -23,6 +24,9 @@ api.use('/auth', authJWT, authRoutes);
 
 // --------------------- Profile Update -----------------------
 api.use('/profile', profileRoutes);
+
+// ---------------------- Change Password ---------------------
+api.use('/changePassword', authJWT, passwordRoutes);
 
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
