@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { searchOffers } from '../lib/searchUtils'; // Ensure this import is correct
+import { searchOffers } from '../lib/searchUtils';
 
 export default class SearchController {
   async search(req: Request, res: Response, next: NextFunction) {
