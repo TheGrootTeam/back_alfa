@@ -9,6 +9,7 @@ import registerRoutes from './registerRoutes';
 import profileRoutes from './profileRoutes';
 import authJWT from '../middlewares/authJWT';
 import authRoutes from './authRoutes';
+import searchRoutes from './searchRoutes';
 
 const api = express.Router();
 
@@ -29,6 +30,9 @@ api.use('/offers', offersRoutes);
 
 // ------------------------ InfoDashboards -----------------------------
 api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
+
+// ------------------------ Search ------------------------------
+api.use('/search', searchRoutes);
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {
