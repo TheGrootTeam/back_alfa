@@ -38,7 +38,7 @@ export default class CreateOfferController {
       return res.status(201).json(savedOffer);
 
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error' });
+      console.log({ message: 'Internal server error [CreateOfferController]' });
       next(error);
     }
 
