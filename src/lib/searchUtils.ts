@@ -1,4 +1,5 @@
 import { offersList } from '../lib/offersUtils';
+import Offer from '../models/Offer';
 import { Request } from 'express';
 
 interface SearchParams {
@@ -14,23 +15,44 @@ interface SearchParams {
 }
 
 export async function searchOffers(params: SearchParams) {
-  // Simulate a Request object by crafting only the necessary fields
+  const page = Number(params.page) || 1;
+  const limit = Number(params.limit) || 10;
+  const skip = (page - 1) * limit;
+
   const req = {
     query: {
       position: params.searchTerm,
       location: params.location,
       typeJob: params.typeJob,
       internJob: params.internJob,
-      status: params.status,
+      status: params.status === 'true' ? true : params.status === 'false' ? false : undefined,
       companyOwner: params.companyOwner,
       sort: params.sort || '-publicationDate',
-      skip: String((Number(params.page || '1') - 1) * Number(params.limit || '10')),
-      limit: params.limit || '10'
+      skip: skip.toString(),
+      limit: limit.toString()
     }
-  } as unknown as Request; // Casting to Request type
+  } as unknown as Request;
 
-  // Use the existing offersList function to get the filtered results
   const offers = await offersList(req);
+  console.log('Offers fetched:', offers);
 
-  return offers;
+  // Build filter object
+  const filter: { [key: string]: any } = {
+    position: params.searchTerm ? new RegExp(params.searchTerm, 'i') : undefined,
+    location: params.location || undefined,
+    typeJob: params.typeJob || undefined,
+    internJob: params.internJob || undefined,
+    status: params.status === 'true' ? true : params.status === 'false' ? false : undefined,
+    companyOwner: params.companyOwner || undefined
+  };
+
+  // Remove undefined fields
+  Object.keys(filter).forEach((key) => filter[key] === undefined && delete filter[key]);
+
+  const totalResults = await Offer.countDocuments(filter);
+
+  return {
+    offers,
+    totalResults
+  };
 }
