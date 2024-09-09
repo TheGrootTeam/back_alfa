@@ -4,21 +4,20 @@ import Sector from '../models/Sector';
 import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
 import mongoose from 'mongoose';
-
-async function getDefaultSectorId() {
-  let defaultSector = await Sector.findOne({ sector: 'Default Sector' });
-  if (!defaultSector) {
-    defaultSector = new Sector({ sector: 'Default Sector' });
-    await defaultSector.save();
-  }
-  return defaultSector._id;
-}
+import createError from 'http-errors';
 
 export default class RegisterController {
-  async register(req: Request, res: Response, _next: NextFunction) {
+  async register(req: Request, res: Response, next: NextFunction) {
+    async function getDefaultSectorId(sector: string) {
+      const defaultSector = await Sector.findById(sector);
+
+      return defaultSector;
+    }
+
     try {
       const {
         dniCif,
+        sector,
         password,
         isCompany,
         email,
@@ -55,7 +54,11 @@ export default class RegisterController {
       }
 
       const hashedPassword = await hashPassword(password);
-      const defaultSectorId = await getDefaultSectorId();
+      const defaultSectorId = await getDefaultSectorId(sector);
+      if (!defaultSectorId) {
+        next(createError(400, 'Sector not found'));
+        return;
+      }
 
       const user = isCompany
         ? new Company({
