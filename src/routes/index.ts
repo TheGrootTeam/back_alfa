@@ -11,6 +11,7 @@ import authJWT from '../middlewares/authJWT';
 import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
+import searchRoutes from './searchRoutes';
 
 const api = express.Router();
 
@@ -37,6 +38,9 @@ api.use('/offers', offersRoutes);
 
 // ------------------------ InfoDashboards -----------------------------
 api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
+
+// ------------------------ Search ------------------------------
+api.use('/search', searchRoutes);
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {
