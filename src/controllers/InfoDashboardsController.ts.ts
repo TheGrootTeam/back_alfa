@@ -37,7 +37,7 @@ export default class InfoDashboardsController {
           {
             path: 'publishedOffers',
             model: Offer,
-            select: 'position location status'
+            select: 'position location status publicationDate'
           }
         ]);
 
