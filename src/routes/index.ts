@@ -13,6 +13,7 @@ import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
 import emailRoutes from './emailRoutes';
+import sendMailRoutes from './sendMailRoutes';
 
 const api = express.Router();
 
@@ -45,6 +46,7 @@ api.use('/search', searchRoutes);
 
 // ---------------------- Emails -------------------------------
 api.use('/emails', emailRoutes); 
+api.use('/send-email', sendMailRoutes); 
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {
