@@ -12,6 +12,7 @@ import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
+import emailRoutes from './emailRoutes';
 
 const api = express.Router();
 
@@ -41,6 +42,9 @@ api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
 
 // ------------------------ Search ------------------------------
 api.use('/search', searchRoutes);
+
+// ---------------------- Emails -------------------------------
+api.use('/emails', emailRoutes); 
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {
