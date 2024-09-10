@@ -1,6 +1,6 @@
 import OffersController from './OffersController';
 import LoginController from './LoginController';
-import InfoDashboardsController from './InfoDashboardsController.ts';
+import InfoDashboardsController from './InfoDashboardsController';
 import AuthController from './authController';
 
 export const controllers = {
