@@ -12,6 +12,7 @@ import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
+import lostPasswordRoutes from './lostPasswordRoutes';
 
 const api = express.Router();
 
@@ -32,6 +33,9 @@ api.use('/delete-profile', deleteProfileRoutes);
 
 // ---------------------- Change Password ---------------------
 api.use('/changePassword', authJWT, passwordRoutes);
+
+// ----------------------- Lost Password ----------------------
+api.use('/lost-password', lostPasswordRoutes);
 
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
