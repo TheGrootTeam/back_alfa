@@ -4,7 +4,7 @@ import mongoose, { Schema } from 'mongoose';
 //Esquema para empresas de la BBDD
 
 const applicantSchema = new mongoose.Schema({
-  dniCif: { type: String, required: true },
+  dniCif: { type: String, required: true, index: true },
   password: { type: String, required: true },
   name: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -12,15 +12,6 @@ const applicantSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   photo: { type: String, default: null }, //url to image
   cv: { type: String, required: true }, //url a documento
-  //Other althernative to VC
-  // cv : [{
-  //   company_name: {type: String, required: true},
-  //   start_date: {type: Date, required: true},
-  //   end_date: {type: Date, required: true},
-  //   role: {type: String, required: false},
-  //   job: {type: Boolean, required: true}, //experiencia laboral o académica
-  //   description: {type: String, required: false},
-  // }],
   ubication: { type: String, required: false },
   typeJob: { type: String, required: true }, //presencial - teletrabajo - hibrido
   internType: { type: String, required: true }, //renumerado, no renumerado, voluntariado
