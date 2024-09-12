@@ -39,7 +39,7 @@ export default class EditOfferController {
         }
       };
       const result = await Offer.updateOne(filterIdOffer, updateDataOffer);
-      if (result.modifiedCount === 0) {
+      if (result.matchedCount === 0) { //modifiedCount is not used in case the user clicks save without changing the date
         res.status(404).json({ message: 'Offer not update' });
         return;
       }
