@@ -4,7 +4,7 @@ import mongoose, { Schema } from 'mongoose';
 //Esquema para empresas de la BBDD
 
 const companySchema = new mongoose.Schema({
-  dniCif: { type: String, required: true },
+  dniCif: { type: String, required: true, index: true },
   password: { type: String, required: true }, //aplicar hash
   name: { type: String, required: true },
   email: { type: String, required: true },
@@ -17,7 +17,8 @@ const companySchema = new mongoose.Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'Offer',
-      required: false
+      required: false,
+      index: true
     }
   ]
 });
