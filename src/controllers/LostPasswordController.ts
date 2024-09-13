@@ -4,9 +4,10 @@ import Applicant from '../models/Applicant';
 import createError from 'http-errors';
 import TokenLostPassword from '../models/TokenLostPassword';
 import jwt from 'jsonwebtoken';
+import { isPasswordStrong } from '../lib/validators';
 
 export default class LostPasswordController {
-  async index(req: Request, res: Response, next: NextFunction) {
+  async email(req: Request, res: Response, next: NextFunction) {
     try {
       const email = req.params.email;
       let jwtToken = '';
@@ -38,6 +39,30 @@ export default class LostPasswordController {
         next(createError(404, 'No user with this email'));
         return;
       }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async renewPassword(req: Request, res: Response, next: NextFunction) {
+    const { newPassword, token } = req.body;
+    try {
+      // verify all data received
+      if (!newPassword || !token) {
+        next(createError(400, 'Missing required fields'));
+        return;
+      }
+      // verify format password
+      if (!isPasswordStrong(newPassword)) {
+        next(createError(400, 'Invalid password format'));
+        return;
+      }
+      // verify expired jwt
+
+      // verify token-userId exist in bbdd
+
+      // verify userId exist
+      res.status(200).json({ jola: 'hola' });
     } catch (error) {
       next(error);
     }
