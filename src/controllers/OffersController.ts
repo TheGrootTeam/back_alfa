@@ -3,6 +3,7 @@ import { offersList } from '../lib/offersUtils';
 import createError from 'http-errors';
 import { CustomRequest } from '../interfaces/IauthJWT';
 import Offer from '../models/Offer';
+import Company from '../models/Company';
 
 export default class OffersController {
   async index(req: Request, res: Response, next: NextFunction) {
@@ -35,6 +36,16 @@ export default class OffersController {
       }
 
       await Offer.deleteOne({ _id: offerId });
+
+      //Updating publishedOffers in DB (Companies document): deleting the id of offer deleted
+      const updateCompanyResult = await Company.updateOne(
+        { _id: offer.companyOwner._id },
+        { $pull: { publishedOffers: offerId } }
+      );
+      if (updateCompanyResult.modifiedCount < 1) {
+        throw new Error('Error removing the offer from the company');
+      }
+
       res.status(200).json({ message: `Offer ${offerId} deleted` });
     } catch (error) {
       next(error);
