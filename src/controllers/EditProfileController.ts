@@ -9,7 +9,7 @@ export default class EditProfileController {
     try {
       const userId = req.apiUserId;
       const applicantOrCompany = req.params.applicantOrCompany;
-      const data = req.body;
+      const data = req.body; // Sustituir data.photo y data.cv por string
       if (data.id !== userId) {
         return res.status(403).json({ message: 'You are not authorized to edit this offer' });
       }
@@ -17,13 +17,13 @@ export default class EditProfileController {
       if (applicantOrCompany === 'applicant') {
         const result = await Applicant.updateOne({ _id: userId }, data);
         if (result.modifiedCount === 0) {
-          res.status(404).json({ message: 'Offer not update' });
+          res.status(404).json({ message: 'Info not update' });
           return;
         }
       } else if (applicantOrCompany === 'company') {
         const result = await Company.updateOne({ _id: userId }, data);
         if (result.modifiedCount === 0) {
-          res.status(404).json({ message: 'Offer not update' });
+          res.status(404).json({ message: 'Info not update' });
           return;
         } else {
           res.status(404).json({ error: 'Invalid query parameter' });
