@@ -3,8 +3,9 @@ import Company from '../models/Company';
 import Applicant from '../models/Applicant';
 import createError from 'http-errors';
 import TokenLostPassword from '../models/TokenLostPassword';
-import jwt from 'jsonwebtoken';
+import jwt, { VerifyErrors } from 'jsonwebtoken';
 import { isPasswordStrong } from '../lib/validators';
+import { JwtPayload } from '../interfaces/IauthJWT';
 
 export default class LostPasswordController {
   async email(req: Request, res: Response, next: NextFunction) {
@@ -21,7 +22,7 @@ export default class LostPasswordController {
       if (user) {
         const token = await TokenLostPassword.findOne({ userId: user._id.toString() });
         // create new jwtToken
-        jwtToken = await jwt.sign({ user: user._id.toString() }, process.env.JWT_SECRET as string, {
+        jwtToken = await jwt.sign({ userId: user._id.toString() }, process.env.JWT_SECRET as string, {
           expiresIn: '1h'
         });
 
@@ -33,7 +34,7 @@ export default class LostPasswordController {
           const newtoken = new TokenLostPassword({ token: jwtToken, userId: user._id.toString() });
           await newtoken.save();
         }
-        const url = `http://${req.host}/lost-password/${jwtToken}`;
+        const url = `http://${req.hostname}/lost-password/${jwtToken}`;
         res.status(200).json({ email, name: user.name, url });
       } else {
         next(createError(404, 'No user with this email'));
@@ -59,9 +60,22 @@ export default class LostPasswordController {
       }
       // verify expired jwt
 
-      // verify token-userId exist in bbdd
+      let userIdToken: undefined | string;
+      jwt.verify(token, process.env.JWT_SECRET as string, (err: VerifyErrors | null, payload: unknown) => {
+        if (err) {
+          throw new Error(err.message);
+        }
+        userIdToken = (payload as JwtPayload).userId;
+      });
 
+      // verify token-userId exist in bbdd
+      const tokenBbdd = await TokenLostPassword.findOne({ token, userId: userIdToken });
+      if (token! != tokenBbdd?.token && userIdToken !== tokenBbdd?.userId.toString()) {
+        next(createError(401, 'Invalid token'));
+        return;
+      }
       // verify userId exist
+
       res.status(200).json({ jola: 'hola' });
     } catch (error) {
       next(error);
