@@ -6,6 +6,7 @@ import TokenLostPassword from '../models/TokenLostPassword';
 import jwt, { VerifyErrors } from 'jsonwebtoken';
 import { isPasswordStrong } from '../lib/validators';
 import { JwtPayload } from '../interfaces/IauthJWT';
+import { hashPassword } from '../lib/utils';
 
 export default class LostPasswordController {
   async email(req: Request, res: Response, next: NextFunction) {
@@ -13,11 +14,7 @@ export default class LostPasswordController {
       const email = req.params.email;
       let jwtToken = '';
 
-      let user = await Company.findOne({ email });
-
-      if (!user) {
-        user = await Applicant.findOne({ email });
-      }
+      const user = (await Company.findOne({ email })) || (await Applicant.findOne({ email }));
 
       if (user) {
         const token = await TokenLostPassword.findOne({ userId: user._id.toString() });
@@ -70,13 +67,33 @@ export default class LostPasswordController {
 
       // verify token-userId exist in bbdd
       const tokenBbdd = await TokenLostPassword.findOne({ token, userId: userIdToken });
-      if (token! != tokenBbdd?.token && userIdToken !== tokenBbdd?.userId.toString()) {
+      if (token !== tokenBbdd?.token && userIdToken !== tokenBbdd?.userId.toString()) {
         next(createError(401, 'Invalid token'));
         return;
       }
       // verify userId exist
+      const user = (await Company.findById(userIdToken)) || (await Applicant.findById(userIdToken));
 
-      res.status(200).json({ jola: 'hola' });
+      if (!user) {
+        next(createError(404, 'User not found'));
+        return;
+      }
+
+      // hash passwords
+      const hashedNewPassword = await hashPassword(newPassword);
+
+      if ('lastName' in user) {
+        await Applicant.findByIdAndUpdate(userIdToken, { password: hashedNewPassword });
+      } else {
+        await Company.findByIdAndUpdate(userIdToken, { password: hashedNewPassword });
+      }
+
+      // delete token in bbdd
+      if (tokenBbdd) {
+        await tokenBbdd.deleteOne();
+      }
+
+      res.status(200).json({ success: `Password for user ${userIdToken} changed successfully` });
     } catch (error) {
       next(error);
     }
