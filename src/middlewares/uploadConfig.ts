@@ -1,30 +1,66 @@
-import multer, { StorageEngine } from 'multer';
+import { Response, NextFunction } from 'express';
+import multer, { MulterError, StorageEngine } from 'multer';
 import path from 'path';
+import createError from 'http-errors';
+import { CustomRequest } from '../interfaces/IauthJWT';
 
-// configure storing files to disk
 const storage: StorageEngine = multer.diskStorage({
-  destination: function (_req, file, callback) {
-    if (file.mimetype.startsWith('logo/')) {
-      const storagePath = path.join(__dirname, '..', 'public/logos');
-      callback(null, storagePath);
-    } else if (file.mimetype.startsWith('photo/')) {
-      const storagePath = path.join(__dirname, '..', 'public/profile');
-      callback(null, storagePath);
-    } else if (file.mimetype === 'application/pdf') {
-      const storagePath = path.join(__dirname, '..', 'uploads/cv');
-      callback(null, storagePath);
+  //configure folder to store files and filter allowed formats
+  destination: function (req, file, callback) {
+    const applicantOrCompany = req.params.applicantOrCompany;
+    if (applicantOrCompany === 'applicant') {
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        const storagePath = path.join(__dirname, '..', 'public', 'photo');
+        callback(null, storagePath);
+      } else if (file.mimetype === 'application/pdf') {
+        const storagePath = path.join(__dirname, '..', 'uploads', 'cv');
+        callback(null, storagePath);
+      } else {
+        callback(createError(400, 'File format not allowed'), '');
+      }
+    } else if (applicantOrCompany === 'company') {
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        const storagePath = path.join(__dirname, '..', 'public', 'logo');
+        callback(null, storagePath);
+      } else {
+        callback(createError(400, 'File format not allowed'), '');
+      }
     } else {
-      callback(new Error('File not allowed'), '');
+      callback(createError(400, 'Unknown user type in upload files'), '');
     }
   },
+  //configure file name
   filename: function (_req, file, callback) {
-    try {
-      const filename = `${file.fieldname}-${Date.now()}-${file.originalname}`;
-      callback(null, filename);
-    } catch (error) {
-      callback(error instanceof Error ? error : new Error('Unknown error'), '');
+    const filename = `${file.fieldname}-${Date.now()}-${file.originalname}`;
+    callback(null, filename);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  fileFilter: function (_req, file, callback) {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+      callback(null, true);
+    } else {
+      callback(createError(400, 'Invalid file type. Only JPEG, PNG, and PDF files are allowed.'));
     }
   }
 });
 
-export default storage;
+const uploadMiddleware = (req: CustomRequest, _res: Response, next: NextFunction) => {
+  const fields = [
+    { name: 'photo', maxCount: 1 },
+    { name: 'cv', maxCount: 1 }
+  ];
+
+  upload.fields(fields)(req, _res, (err) =>  {
+    if (err instanceof MulterError) {
+      next(createError(400, `${err.message}`));
+      return;
+    } else {
+      next();
+    }
+  });
+};
+
+export default uploadMiddleware;
