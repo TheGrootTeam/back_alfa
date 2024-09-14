@@ -7,6 +7,7 @@ import jwt, { VerifyErrors } from 'jsonwebtoken';
 import { isPasswordStrong } from '../lib/validators';
 import { JwtPayload } from '../interfaces/IauthJWT';
 import { hashPassword } from '../lib/utils';
+import { sendEmail } from '../services/emailService';
 
 export default class LostPasswordController {
   async email(req: Request, res: Response, next: NextFunction) {
@@ -32,7 +33,22 @@ export default class LostPasswordController {
           await newtoken.save();
         }
         const url = `http://${req.hostname}/lost-password/${jwtToken}`;
-        res.status(200).json({ email, name: user.name, url });
+        const subject = 'Recuperación de contraseña';
+        const message = `
+          <h1>Instrucciones para restablecer tu contraseña</h1>
+          <p>Estimado/a ${user.name},</p>
+          <p>Hemos recibido una solicitud para restablecer la contraseña de tu cuenta en InternIT. Para continuar con el proceso, por favor, haz clic en el siguiente enlace:</p>
+          <a href="${url}">Restablecer mi contraseña</a>
+          <p>Este enlace te llevará a una página donde podrás establecer una nueva contraseña para tu cuenta. Ten en cuenta que el enlace es válido por una hora, después del cual tendrás que solicitar un nuevo enlace si aún necesitas restablecer tu contraseña.</p>
+          <p>Si no solicitaste un restablecimiento de contraseña, por favor ignora este correo electrónico.</p>
+          <p>Gracias por usar InternIT.</p>
+          <p>Atentamente,</p>
+          <p>El equipo de soporte de <a href="https://internit.tech/">InternIT</a></p>
+        `;
+
+        const emailResponse = await sendEmail(email, subject, message, '');
+
+        res.status(200).json({ result: emailResponse });
       } else {
         next(createError(404, 'No user with this email'));
         return;
