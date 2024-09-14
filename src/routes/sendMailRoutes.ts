@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
-import { sendEmail } from '../services/emailService';  // Asegúrate de que esté en la ruta correcta
+import { sendEmail } from '../services/emailService';
 
 const router = express.Router();
 
-// Route to send emails from Applicant to the company
 router.post('/contact-company', async (req: Request, res: Response) => {
   const { applicantEmail, companyEmail, offerTitle, message } = req.body;
 
@@ -12,12 +11,20 @@ router.post('/contact-company', async (req: Request, res: Response) => {
   }
 
   try {
-    // Send the email using the mail service that we have created with Resend
+    const emailBody = `
+      <p>${message}</p>
+      <p>Este correo fue enviado por: <strong>${applicantEmail}</strong></p>
+      <p>Puedes contactar con el solicitante haciendo clic en el siguiente enlace:</p>
+      <a href="mailto:${applicantEmail}?subject=Re: ${offerTitle}">Responder al solicitante</a>
+    `;
+
     const emailResponse = await sendEmail(
       companyEmail,
       `Interesado en la oferta: ${offerTitle}`,
-      `<p>${message}</p><p>Este correo fue enviado por: ${applicantEmail}</p>`
+      emailBody,
+      applicantEmail
     );
+
     res.status(200).json({ success: true, result: emailResponse });
   } catch (error) {
     console.error('Error enviando el correo:', error);
@@ -25,4 +32,4 @@ router.post('/contact-company', async (req: Request, res: Response) => {
   }
 });
 
-export default router;
+export { router };

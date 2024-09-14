@@ -12,8 +12,8 @@ import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
-import emailRoutes from './emailRoutes';
-import sendMailRoutes from './sendMailRoutes';
+import { router as emailRoutes } from './emailRoutes';
+import { router as sendMailRoutes } from './sendMailRoutes';
 
 const api = express.Router();
 
