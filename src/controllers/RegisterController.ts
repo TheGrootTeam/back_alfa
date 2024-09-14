@@ -55,7 +55,7 @@ export default class RegisterController {
 
       const hashedPassword = await hashPassword(password);
       const defaultSectorId = await getDefaultSectorId(sector);
-      if (!defaultSectorId) {
+      if (isCompany && !defaultSectorId) {
         next(createError(400, 'Sector not found'));
         return;
       }
