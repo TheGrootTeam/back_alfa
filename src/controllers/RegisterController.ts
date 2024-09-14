@@ -50,7 +50,6 @@ export default class RegisterController {
       // Check if the dniCif already exists in both Applicant and Company collections
       const existingDniCif = (await Applicant.findOne({ dniCif })) || (await Company.findOne({ dniCif }));
       if (existingDniCif) {
-        console.log('Dentro del if :');
         return res.status(400).json({ message: 'CIF/NIF already exists' });
       }
 
