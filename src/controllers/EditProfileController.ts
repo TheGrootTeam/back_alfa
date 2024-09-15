@@ -11,8 +11,8 @@ export default class EditProfileController {
       const applicantOrCompany = req.params.applicantOrCompany;
 
       // Import file name from req.files
-      let cvFile = '';
-      let photoFile = '';
+      let cvFile = req.body.cv;
+      let photoFile = req.body.photo;
       if (req.files && typeof req.files === 'object' && 'cv' in req.files) {
         cvFile = (req.files['cv'] as Express.Multer.File[])[0].filename;
       }
