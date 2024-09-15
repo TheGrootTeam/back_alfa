@@ -12,6 +12,9 @@ import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
+import { router as emailRoutes } from './emailRoutes';
+import { router as sendMailRoutes } from './sendMailRoutes';
+import lostPasswordRoutes from './lostPasswordRoutes';
 
 const api = express.Router();
 
@@ -33,6 +36,9 @@ api.use('/delete-profile', deleteProfileRoutes);
 // ---------------------- Change Password ---------------------
 api.use('/changePassword', authJWT, passwordRoutes);
 
+// ----------------------- Lost Password ----------------------
+api.use('/lost-password', lostPasswordRoutes);
+
 // ------------------------ Offers -------------------------------
 api.use('/offers', offersRoutes);
 
@@ -41,6 +47,10 @@ api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
 
 // ------------------------ Search ------------------------------
 api.use('/search', searchRoutes);
+
+// ---------------------- Emails -------------------------------
+api.use('/emails', emailRoutes);
+api.use('/send-email', sendMailRoutes);
 
 // ------------------------ Swagger ---------------------------
 function initializeSwagger() {
