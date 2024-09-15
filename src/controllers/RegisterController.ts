@@ -44,7 +44,7 @@ export default class RegisterController {
       // Check if the email already exists in both Applicant and Company collections
       const existingEmail = (await Applicant.findOne({ email })) || (await Company.findOne({ email }));
       if (existingEmail) {
-        return res.status(400).json({ message: 'User already exists' });
+        return res.status(400).json({ message: 'Mail already exists' });
       }
 
       // Check if the dniCif already exists in both Applicant and Company collections
@@ -55,52 +55,52 @@ export default class RegisterController {
 
       const hashedPassword = await hashPassword(password);
       const defaultSectorId = await getDefaultSectorId(sector);
-      if (!defaultSectorId) {
+      if (isCompany && !defaultSectorId) {
         next(createError(400, 'Sector not found'));
         return;
       }
 
       const user = isCompany
         ? new Company({
-            dniCif,
-            password: hashedPassword,
-            email,
-            name: name || 'Default Name',
-            phone: phone || '0000000000',
-            sector: defaultSectorId,
-            ubication: ubication || 'default_ubication',
-            description: description || 'default_description',
-            logo: logo || 'default_logo_url'
-          })
+          dniCif,
+          password: hashedPassword,
+          email,
+          name: name || 'Default Name',
+          phone: phone || '0000000000',
+          sector: defaultSectorId,
+          ubication: ubication || 'default_ubication',
+          description: description || 'default_description',
+          logo: logo || 'default_logo_url'
+        })
         : new Applicant({
-            dniCif,
-            password: hashedPassword,
-            email,
-            name: name || 'Default Name',
-            lastName: lastName || 'Default LastName',
-            phone: phone || '0000000000',
-            photo: photo || 'default_photo_url',
-            cv: cv || 'default_cv_url',
-            ubication: ubication || 'default_ubication',
-            typeJob: typeJob || 'presencial',
-            internType: internType || 'renumerado',
-            wantedRol: wantedRol
-              ? wantedRol
-                  .map((rol: string) =>
-                    mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null
-                  )
-                  .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
-              : [],
-            mainSkills: mainSkills
-              ? mainSkills
-                  .map((skill: string) =>
-                    mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null
-                  )
-                  .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
-              : [],
-            geographically_mobile: geographically_mobile || false,
-            disponibility: disponibility || false
-          });
+          dniCif,
+          password: hashedPassword,
+          email,
+          name: name || 'Default Name',
+          lastName: lastName || 'Default LastName',
+          phone: phone || '0000000000',
+          photo: photo || 'default_photo_url',
+          cv: cv || 'default_cv_url',
+          ubication: ubication || 'default_ubication',
+          typeJob: typeJob || 'presencial',
+          internType: internType || 'renumerado',
+          wantedRol: wantedRol
+            ? wantedRol
+              .map((rol: string) =>
+                mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null
+              )
+              .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+            : [],
+          mainSkills: mainSkills
+            ? mainSkills
+              .map((skill: string) =>
+                mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null
+              )
+              .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+            : [],
+          geographically_mobile: geographically_mobile || false,
+          disponibility: disponibility || false
+        });
 
       await user.save();
 
