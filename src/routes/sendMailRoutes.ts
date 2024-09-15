@@ -1,31 +1,29 @@
 import express, { Request, Response } from 'express';
 import { sendEmail } from '../services/emailService';
-import { getHost } from '../lib/utils'; // Usar la función getHost del backend para construir la URL
+import { getHost } from '../lib/utils'; 
 
 const router = express.Router();
 
 router.post('/contact-company', async (req: Request, res: Response) => {
-  const { applicantEmail, companyEmail, offerTitle, message, applicantId } = req.body;
+  const { applicantEmail, companyEmail, offerTitle, message, applicantId, applicantName, applicantLastName } = req.body;
 
-  if (!applicantEmail || !companyEmail || !offerTitle || !message || !applicantId) {
+
+  if (!applicantEmail || !companyEmail || !offerTitle || !message || !applicantId || !applicantName || !applicantLastName) {
     return res.status(400).json({ error: 'Todos los campos son requeridos' });
   }
 
   try {
-    // Construir la URL del perfil del solicitante
+    // Build the URL of the applicant's profile
     const applicantUrl = `${getHost(req.hostname)}/view/applicant/${applicantId}`;
 
-    // Crear el cuerpo del correo
     const emailBody = `
       <p>${message}</p>
-      <p>Este correo fue enviado por: <strong>${applicantEmail}</strong></p>
+      <p>Ver Perfil del solicitante: <a href="${applicantUrl}">${applicantName} ${applicantLastName}</a></p>
       <p>Puedes contactar con el solicitante haciendo clic en el siguiente enlace:</p>
       <a href="mailto:${applicantEmail}?subject=Re: ${offerTitle}">Responder al solicitante</a>
       <br><br>
-      <p>Ver perfil del solicitante: <a href="${applicantUrl}">${applicantUrl}</a></p>
     `;
 
-    // Enviar el correo
     const emailResponse = await sendEmail(
       companyEmail,
       `Interesado en la oferta: ${offerTitle}`,
