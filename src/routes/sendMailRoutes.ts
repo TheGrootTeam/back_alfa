@@ -12,10 +12,10 @@ router.post('/contact-company', async (req: Request, res: Response) => {
   }
 
   try {
-    // Construir la URL del perfil del solicitante
+    // Build the URL of the applicant's profile
     const applicantUrl = `${getHost(req.hostname)}/view/applicant/${applicantId}`;
 
-    // Cuerpo del correo con botón y fallback
+    
     const emailBody = `
     <p>${message}</p>
   
@@ -71,8 +71,6 @@ router.post('/contact-company', async (req: Request, res: Response) => {
     </p>
   `;
   
-
-    // Enviar el correo
     const emailResponse = await sendEmail(
       companyEmail,
       `Interesado en la oferta: ${offerTitle}`,

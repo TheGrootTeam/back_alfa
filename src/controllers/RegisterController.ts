@@ -5,8 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
 import mongoose from 'mongoose';
 import createError from 'http-errors';
-import { sendEmail } from '../services/emailService';  // Importa la función de envío de emails
-
+import { sendEmail } from '../services/emailService';  
 export default class RegisterController {
   async register(req: Request, res: Response, next: NextFunction) {
     async function getDefaultSectorId(sector: string) {
@@ -107,7 +106,7 @@ export default class RegisterController {
 
       await user.save();
 
-      // Enviar el correo de bienvenida según el tipo de usuario
+      // Send the welcome email according to the user type
       const subject = isCompany
         ? `¡Bienvenido a InternIT, ${name}!`
         : `¡Bienvenido a InternIT, ${name}!`;
