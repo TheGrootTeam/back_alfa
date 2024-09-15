@@ -12,7 +12,6 @@ import authRoutes from './authRoutes';
 import deleteProfileRoutes from './deleteProfileRoutes';
 import passwordRoutes from './passwordRoutes';
 import searchRoutes from './searchRoutes';
-import { router as emailRoutes } from './emailRoutes';
 import { router as sendMailRoutes } from './sendMailRoutes';
 import lostPasswordRoutes from './lostPasswordRoutes';
 
@@ -49,7 +48,6 @@ api.use('/infoDashboards', authJWT, infoDashboardsRoutes);
 api.use('/search', searchRoutes);
 
 // ---------------------- Emails -------------------------------
-api.use('/emails', emailRoutes);
 api.use('/send-email', sendMailRoutes);
 
 // ------------------------ Swagger ---------------------------

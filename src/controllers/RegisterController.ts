@@ -5,12 +5,12 @@ import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
 import mongoose from 'mongoose';
 import createError from 'http-errors';
+import { sendEmail } from '../services/emailService';  // Importa la función de envío de emails
 
 export default class RegisterController {
   async register(req: Request, res: Response, next: NextFunction) {
     async function getDefaultSectorId(sector: string) {
       const defaultSector = await Sector.findById(sector);
-
       return defaultSector;
     }
 
@@ -60,8 +60,9 @@ export default class RegisterController {
         return;
       }
 
-      const user = isCompany
-        ? new Company({
+      let user;
+      if (isCompany) {
+        user = new Company({
           dniCif,
           password: hashedPassword,
           email,
@@ -71,8 +72,9 @@ export default class RegisterController {
           ubication: ubication || 'default_ubication',
           description: description || 'default_description',
           logo: logo || 'default_logo_url'
-        })
-        : new Applicant({
+        });
+      } else {
+        user = new Applicant({
           dniCif,
           password: hashedPassword,
           email,
@@ -83,7 +85,7 @@ export default class RegisterController {
           cv: cv || 'default_cv_url',
           ubication: ubication || 'default_ubication',
           typeJob: typeJob || 'presencial',
-          internType: internType || 'renumerado',
+          internType: internType || 'remunerado',
           wantedRol: wantedRol
             ? wantedRol
               .map((rol: string) =>
@@ -101,10 +103,34 @@ export default class RegisterController {
           geographically_mobile: geographically_mobile || false,
           disponibility: disponibility || false
         });
+      }
 
       await user.save();
 
-      return res.status(201).json({ message: 'User registered successfully' });
+      // Enviar el correo de bienvenida según el tipo de usuario
+      const subject = isCompany
+        ? `¡Bienvenido a InternIT, ${name}!`
+        : `¡Bienvenido a InternIT, ${name}!`;
+
+      const message = isCompany
+        ? `
+          <h1>¡Hola, ${name}!😃🤚🏻</h1>
+          <p>Estamos muy emocionados de tenerte a bordo como parte de nuestra red de empresas en InternIT.</p>
+          <p>Ahora puedes publicar ofertas de trabajo y encontrar el mejor talento para tu empresa.</p>
+          <p>Si tienes alguna duda, no dudes en contactar con nosotros. ¡Estamos aquí para ayudarte a tener éxito!</p>
+          <p>Atentamente,<br/>El equipo de a href="https://internit.tech">InternIT</a></p>
+        `
+        : `
+          <h1>¡Hola, ${name}! 😃🤚🏻</h1>
+          <p>Gracias por unirte a InternIT. Estamos aquí para ayudarte a encontrar el trabajo de tus sueños.</p>
+          <p>Puedes empezar a crear tu perfil, buscar ofertas de trabajo y contactar a las empresas que más te interesen.</p>
+          <p>Si necesitas asistencia, estamos a tu disposición. ¡Te deseamos mucho éxito en tu búsqueda!</p>
+          <p>Atentamente,<br/>El equipo de <a href="https://internit.tech">InternIT</a></p>
+        `;
+
+      await sendEmail(email, subject, message, '');
+
+      return res.status(201).json({ message: 'User registered successfully, and welcome email sent' });
     } catch (error) {
       console.error('Error in register:', error);
       if (!res.headersSent) {
