@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/bin/www.js",
     "dev": "cross-env NODEPOP_ENV=development DEBUG=back_alfa:* ts-node-dev src/bin/www.ts",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && npm run copy-assets",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "lint": "eslint . --ext .ts",
@@ -14,7 +14,8 @@
     "tsc": "tsc",
     "initDB": "ts-node initDB.ts",
     "initDBtest": "ts-node initDBtest.ts",
-    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js"
+    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js",
+    "copy-assets": "cp -r src/public dist/public && cp -r src/uploads dist/uploads"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
