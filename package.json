@@ -5,7 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/bin/www.js",
     "dev": "cross-env NODE_ENV=development DEBUG=back_alfa:* ts-node-dev src/bin/www.ts",
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && npm run copy-assets",
     "test": "jest",
     "test:watch": "jest --watchAll",
     "lint": "eslint . --ext .ts",
@@ -14,13 +14,15 @@
     "tsc": "tsc",
     "initDB": "ts-node initDB.ts",
     "initDBtest": "ts-node initDBtest.ts",
-    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js"
+    "buildstart": "rimraf dist && tsc && cross-env NODE_ENV=production node dist/bin/www.js",
+    "copy-assets": "cp -r src/public dist/public && cp -r src/uploads dist/uploads"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.17",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/mongodb": "^4.0.7",
+    "@types/multer": "^1.4.12",
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -33,6 +35,7 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.1",
     "morgan": "~1.9.1",
+    "multer": "^1.4.5-lts.1",
     "resend": "^4.0.0",
     "rimraf": "^6.0.1",
     "swagger-jsdoc": "^6.2.8",
