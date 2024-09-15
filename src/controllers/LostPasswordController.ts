@@ -33,6 +33,7 @@ export default class LostPasswordController {
           await newtoken.save();
         }
         const url = `${getHost(req.hostname)}/lost-password/${jwtToken}`;
+        console.log(req.hostname);
         console.log(url);
         const subject = 'Recuperación de contraseña';
         const message = `
