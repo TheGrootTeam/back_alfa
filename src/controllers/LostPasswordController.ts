@@ -6,7 +6,7 @@ import TokenLostPassword from '../models/TokenLostPassword';
 import jwt, { VerifyErrors } from 'jsonwebtoken';
 import { isPasswordStrong } from '../lib/validators';
 import { JwtPayload } from '../interfaces/IauthJWT';
-import { hashPassword } from '../lib/utils';
+import { getHost, hashPassword } from '../lib/utils';
 import { sendEmail } from '../services/emailService';
 
 export default class LostPasswordController {
@@ -32,7 +32,8 @@ export default class LostPasswordController {
           const newtoken = new TokenLostPassword({ token: jwtToken, userId: user._id.toString() });
           await newtoken.save();
         }
-        const url = `http://${req.hostname}/lost-password/${jwtToken}`;
+        const url = `${getHost(req.hostname)}/lost-password/${jwtToken}`;
+        console.log(url);
         const subject = 'Recuperación de contraseña';
         const message = `
           <h1>Instrucciones para restablecer tu contraseña</h1>
