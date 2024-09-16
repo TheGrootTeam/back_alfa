@@ -1,5 +1,7 @@
 import express from 'express';
 import RegisterController from '../controllers/RegisterController';
+import uploadMiddleware from '../middlewares/uploadConfig';
+
 
 const registerController = new RegisterController();
 const registerRoutes = express.Router();
@@ -61,6 +63,6 @@ const registerRoutes = express.Router();
  *        description: Bad request
  */
 
-registerRoutes.post('/', registerController.register);
+registerRoutes.post('/', uploadMiddleware, registerController.register);
 
 export default registerRoutes;

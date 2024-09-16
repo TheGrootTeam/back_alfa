@@ -8,18 +8,21 @@ import fs from 'fs';
 const storage: StorageEngine = multer.diskStorage({
   //configure folder to store files and filter allowed formats
   destination: function (req, file, callback) {
-    const applicantOrCompany = req.params.applicantOrCompany;
+    let applicantOrCompany = req.params.applicantOrCompany;
+    if (!applicantOrCompany) {
+      applicantOrCompany = req.body.isCompany ? 'company' : 'applicant';
+    }
     if (applicantOrCompany === 'applicant') {
       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
         const storagePath = path.resolve('src/public/photo');
-        if (!fs.existsSync(storagePath)){
-          fs.mkdirSync(storagePath, {recursive: true});
+        if (!fs.existsSync(storagePath)) {
+          fs.mkdirSync(storagePath, { recursive: true });
         }
         callback(null, storagePath);
       } else if (file.mimetype === 'application/pdf') {
         const storagePath = path.resolve('src/uploads/cv');
-        if (!fs.existsSync(storagePath)){
-          fs.mkdirSync(storagePath, {recursive: true});
+        if (!fs.existsSync(storagePath)) {
+          fs.mkdirSync(storagePath, { recursive: true });
         }
         callback(null, storagePath);
       } else {
@@ -28,8 +31,8 @@ const storage: StorageEngine = multer.diskStorage({
     } else if (applicantOrCompany === 'company') {
       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
         const storagePath = path.resolve('src/public/logo');
-        if (!fs.existsSync(storagePath)){
-          fs.mkdirSync(storagePath, {recursive: true});
+        if (!fs.existsSync(storagePath)) {
+          fs.mkdirSync(storagePath, { recursive: true });
         }
         callback(null, storagePath);
       } else {
@@ -40,8 +43,8 @@ const storage: StorageEngine = multer.diskStorage({
     }
   },
   //configure file name
-  filename: function (req, file, callback) {
-    const filename = `${file.fieldname}-${req.body.id}-${file.originalname}`;
+  filename: function (_req, file, callback) {
+    const filename = `${file.fieldname}-${Date.now()}-${file.originalname}`;
     callback(null, filename);
   }
 });
@@ -49,7 +52,12 @@ const storage: StorageEngine = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: function (_req, file, callback) {
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf') {
+    if (
+      file.mimetype === 'image/jpeg' ||
+      file.mimetype === 'image/jpg' ||
+      file.mimetype === 'image/png' ||
+      file.mimetype === 'application/pdf'
+    ) {
       callback(null, true);
     } else {
       callback(createError(400, 'Invalid file type. Only JPEG, JPG, PNG, and PDF files are allowed.'));
@@ -58,12 +66,12 @@ const upload = multer({
 });
 
 const uploadMiddleware = (req: CustomRequest, _res: Response, next: NextFunction) => {
-  
   const fields = [
     { name: 'photo', maxCount: 1 },
-    { name: 'cv', maxCount: 1 }
+    { name: 'cv', maxCount: 1 },
+    { name: 'logo', maxCount: 1 }
   ];
-  upload.fields(fields)(req, _res, (err) =>  {
+  upload.fields(fields)(req, _res, (err) => {
     if (err instanceof MulterError) {
       next(createError(400, `${err.message}`));
       return;
