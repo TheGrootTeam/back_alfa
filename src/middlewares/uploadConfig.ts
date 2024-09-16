@@ -61,7 +61,8 @@ const uploadMiddleware = (req: CustomRequest, _res: Response, next: NextFunction
   
   const fields = [
     { name: 'photo', maxCount: 1 },
-    { name: 'cv', maxCount: 1 }
+    { name: 'cv', maxCount: 1 }, 
+    { name: 'logo', maxCount: 1 },
   ];
   upload.fields(fields)(req, _res, (err) =>  {
     if (err instanceof MulterError) {
