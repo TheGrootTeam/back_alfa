@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from 'express';
 import { hashPassword } from '../lib/utils';
 import mongoose from 'mongoose';
 import createError from 'http-errors';
-import { sendEmail } from '../services/emailService';  
+import { sendEmail } from '../services/emailService';
 export default class RegisterController {
   async register(req: Request, res: Response, next: NextFunction) {
     async function getDefaultSectorId(sector: string) {
@@ -32,8 +32,7 @@ export default class RegisterController {
         mainSkills,
         geographically_mobile,
         disponibility,
-        description,
-        logo
+        description
       } = req.body;
 
       if (!dniCif || !password || isCompany === undefined || !email) {
@@ -61,6 +60,10 @@ export default class RegisterController {
 
       let user;
       if (isCompany) {
+        let logoFile = req.body.logo;
+        if (req.files && typeof req.files === 'object' && 'logo' in req.files) {
+          logoFile = (req.files['logo'] as Express.Multer.File[])[0].filename;
+        }
         user = new Company({
           dniCif,
           password: hashedPassword,
@@ -70,7 +73,7 @@ export default class RegisterController {
           sector: defaultSectorId,
           ubication: ubication || 'default_ubication',
           description: description || 'default_description',
-          logo: logo || 'default_logo_url'
+          logo: logoFile
         });
       } else {
         user = new Applicant({
@@ -87,26 +90,23 @@ export default class RegisterController {
           internType: internType || 'remunerado',
           wantedRol: wantedRol
             ? wantedRol
-              .map((rol: string) =>
-                mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null
-              )
-              .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+                .map((rol: string) => (mongoose.Types.ObjectId.isValid(rol) ? new mongoose.Types.ObjectId(rol) : null))
+                .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
             : [],
           mainSkills: mainSkills
             ? mainSkills
-              .map((skill: string) =>
-                mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null
-              )
-              .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
+                .map((skill: string) =>
+                  mongoose.Types.ObjectId.isValid(skill) ? new mongoose.Types.ObjectId(skill) : null
+                )
+                .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
             : [],
           geographically_mobile: geographically_mobile || false,
           disponibility: disponibility || false
         });
       }
-
       await user.save();
 
-      // Send the welcome email according to the user type
+      //Send the welcome email according to the user type
       const subject = isCompany
         ? `¡Bienvenido a InternIT, ${name}!`
         : `¡Bienvenido a InternIT, ${name}!`;

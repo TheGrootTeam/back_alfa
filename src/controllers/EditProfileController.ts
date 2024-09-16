@@ -51,7 +51,6 @@ export default class EditProfileController {
         data = { logo, ...rest };
         const result = await Company.updateOne({ _id: userId }, data);
         if (result.modifiedCount === 0) {
-          console.log('entro 48');
           res.status(404).json({ message: 'Info not update' });
           return;
         }
