@@ -40,8 +40,8 @@ const storage: StorageEngine = multer.diskStorage({
     }
   },
   //configure file name
-  filename: function (req, file, callback) {
-    const filename = `${file.fieldname}-${req.body.id}-${file.originalname}`;
+  filename: function (_req, file, callback) {
+    const filename = `${file.fieldname}-${Date.now()}-${file.originalname}`;
     callback(null, filename);
   }
 });
