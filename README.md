@@ -1,5 +1,6 @@
-
 # 💻 Proyecto InternIT - Backend
+
+🇪🇸 Versión en Español
 
 ## Tabla de Contenidos
 - [💻 Proyecto InternIT - Backend](#-proyecto-internit---backend)
@@ -37,7 +38,7 @@
 
 ## Descripcion
 
-Este repositorio contiene el código del backend del **Proyecto InternIT**, una API desarrollada en **Node.js** y **TypeScript** para gestionar la comunicación entre empresas y aplicantes de empleo. Proporciona una serie de endpoints para la autenticación, gestión de perfiles, ofertas de trabajo y paneles informativos. Además, se utiliza **MongoDB** como base de datos.
+Este repositorio contiene el código del backend de la aplicacion **InternIT**, una API desarrollada en **Node.js** y **TypeScript** para gestionar la comunicación entre empresas y aplicantes de empleo. Proporciona una serie de endpoints para la autenticación, gestión de perfiles, ofertas de trabajo y paneles informativos. Además, se utiliza **MongoDB** como base de datos.
 
 ## Tecnologías Utilizadas
 
@@ -457,3 +458,7 @@ Para contribuir a este proyecto:
 ## Licencia
 
 Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo [LICENSE](./LICENSE) para obtener más detalles.
+
+___
+🇬🇧 English Version
+
