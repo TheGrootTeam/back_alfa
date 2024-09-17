@@ -23,19 +23,17 @@ export default class RegisterController {
         name,
         lastName,
         phone,
-        cv,
-        photo,
         ubication,
         typeJob,
         internType,
         wantedRol,
         mainSkills,
         geographically_mobile,
-        disponibility,
+        disponibility, 
         description
       } = req.body;
 
-      if (!dniCif || !password || isCompany === undefined || !email) {
+      if (!dniCif || !password || (isCompany === 'true') === undefined || !email) {
         return res.status(400).json({ message: 'All fields are required' });
       }
 
@@ -52,14 +50,15 @@ export default class RegisterController {
       }
 
       const hashedPassword = await hashPassword(password);
-      const defaultSectorId = await getDefaultSectorId(sector);
-      if (isCompany && !defaultSectorId) {
+      const defaultSectorId = (await getDefaultSectorId(sector)) === null ? '' : await getDefaultSectorId(sector);
+      if ((isCompany === 'true') && !defaultSectorId) {
         next(createError(400, 'Sector not found'));
         return;
       }
 
       let user;
-      if (isCompany) {
+
+      if (isCompany === 'true') {
         let logoFile = req.body.logo;
         if (req.files && typeof req.files === 'object' && 'logo' in req.files) {
           logoFile = (req.files['logo'] as Express.Multer.File[])[0].filename;
@@ -76,6 +75,15 @@ export default class RegisterController {
           logo: logoFile
         });
       } else {
+        let cvFile = req.body.cv;
+        let photoFile = req.body.photo;
+        if (req.files && typeof req.files === 'object' && 'cv' in req.files) {
+          cvFile = (req.files['cv'] as Express.Multer.File[])[0].filename;
+        }
+        if (req.files && typeof req.files === 'object' && 'photo' in req.files) {
+          photoFile = (req.files['photo'] as Express.Multer.File[])[0].filename;
+        }
+
         user = new Applicant({
           dniCif,
           password: hashedPassword,
@@ -83,8 +91,8 @@ export default class RegisterController {
           name: name || 'Default Name',
           lastName: lastName || 'Default LastName',
           phone: phone || '0000000000',
-          photo: photo || 'default_photo_url',
-          cv: cv || 'default_cv_url',
+          photo: photoFile,
+          cv: cvFile,
           ubication: ubication || 'default_ubication',
           typeJob: typeJob || 'presencial',
           internType: internType || 'remunerado',
@@ -100,18 +108,16 @@ export default class RegisterController {
                 )
                 .filter((id: mongoose.Types.ObjectId | null): id is mongoose.Types.ObjectId => id !== null)
             : [],
-          geographically_mobile: geographically_mobile || false,
-          disponibility: disponibility || false
+          geographically_mobile: (geographically_mobile === 'true') || false,
+          disponibility: (disponibility === 'true') || false
         });
       }
+
       await user.save();
-
       //Send the welcome email according to the user type
-      const subject = isCompany
-        ? `¡Bienvenido a InternIT, ${name}!`
-        : `¡Bienvenido a InternIT, ${name}!`;
+      const subject = (isCompany === 'true') ? `¡Bienvenido a InternIT, ${name}!` : `¡Bienvenido a InternIT, ${name}!`;
 
-      const message = isCompany
+      const message = (isCompany === 'true')
         ? `
           <h1>¡Hola, ${name}!😃🤚🏻</h1>
           <p>Estamos muy emocionados de tenerte a bordo como parte de nuestra red de empresas en InternIT.</p>
