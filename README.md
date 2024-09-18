@@ -9,6 +9,7 @@
   - [Tecnologías Utilizadas](#tecnologías-utilizadas)
   - [Documentación Técnica](#documentación-técnica)
   - [Requisitos Previos](#requisitos-previos)
+    - [Variables de entorno](#variables-de-entorno)
   - [Instalación y Configuración](#instalación-y-configuración)
   - [Comandos Disponibles](#comandos-disponibles)
     - [Desarrollo](#desarrollo)
@@ -41,6 +42,7 @@
   - [Technologies Used](#technologies-used)
   - [Technical Documentation](#technical-documentation)
   - [Prerequisites](#prerequisites)
+    - [Variables de entorno](#variables-de-entorno-1)
   - [Installation and Setup](#installation-and-setup)
   - [Available Commands](#available-commands)
     - [Development](#development)
@@ -71,6 +73,10 @@
 ## Descripcion
 
 Este repositorio contiene el código del backend de la aplicacion **InternIT**, una API desarrollada en **Node.js** y **TypeScript** para gestionar la comunicación entre empresas y aplicantes para puestos de prácticas. Proporciona una serie de endpoints para la autenticación, gestión de perfiles, ofertas de trabajo y paneles informativos. Además, se utiliza **MongoDB** como base de datos.
+
+Podras acceder al repositorio de la parte de frontend en este enlace https://github.com/TheGrootTeam/front_alfa
+
+You can access the repository of the border part in this link https://github.com/thegrootteam/front_alfa
 
 ## Tecnologías Utilizadas
 
@@ -107,6 +113,17 @@ Antes de comenzar, asegúrate de tener instalados los siguientes software en tu 
 - [npm](https://www.npmjs.com/) (v6.0.0 o superior)
 - [MongoDB](https://www.mongodb.com/try/download/community)
 
+### Variables de entorno 
+
+- MONGO_URI=mongodb://127.0.0.1:27017/Ejemplo
+- API_VERSION=version
+- JWT_SECRET=place-here-a-custom-string
+- RESEND_API_KEY=place-here-your-resend-api-key
+- CLIENT_PORT=vite-port
+  
+- FILES_PATH=/usr/src/app/public # para usar en produccion
+- FILES_PATH=src/public # para usar en desarrollo
+
 ## Instalación y Configuración
 
 Para empezar con el desarrollo de este proyecto, sigue los pasos a continuación:
@@ -127,7 +144,12 @@ Para empezar con el desarrollo de este proyecto, sigue los pasos a continuación
    Debes configurar las variables de entorno en un archivo `.env` en la raíz del proyecto, siguiendo el formato de `.env.example`. Las variables clave incluyen:
    - `MONGODB_URI`: La URI de conexión a MongoDB.
    - `JWT_SECRET`: La clave secreta para el uso de JWT.
-   - `PORT`: El puerto en el que se ejecutará el servidor.
+   - `PORT`: El puerto en el que se ejecutará el servidor.  
+   - `RESEND_API_KEY`: La clave API para enviar correos electrónicos
+   - `CLIENT_PORT` : El puerto donde escuchará el servidor
+
+   - FILES_PATH=/usr/src/app/public # para usar en produccion
+   - FILES_PATH=src/public # para usar en desarrollo
 
 4. **Iniciar la base de datos**:
    ```bash
@@ -505,6 +527,7 @@ ___
   - [Tecnologías Utilizadas](#tecnologías-utilizadas)
   - [Documentación Técnica](#documentación-técnica)
   - [Requisitos Previos](#requisitos-previos)
+    - [Variables de entorno](#variables-de-entorno)
   - [Instalación y Configuración](#instalación-y-configuración)
   - [Comandos Disponibles](#comandos-disponibles)
     - [Desarrollo](#desarrollo)
@@ -537,6 +560,7 @@ ___
   - [Technologies Used](#technologies-used)
   - [Technical Documentation](#technical-documentation)
   - [Prerequisites](#prerequisites)
+    - [Variables de entorno](#variables-de-entorno-1)
   - [Installation and Setup](#installation-and-setup)
   - [Available Commands](#available-commands)
     - [Development](#development)
@@ -567,6 +591,8 @@ ___
 ## Description
 
 This repository contains the backend code for the **InternIT** application, an API developed in **Node.js** and **TypeScript** to manage communication between companies and job applicants. It provides a set of endpoints for authentication, profile management, job offers, and information dashboards. In addition, **MongoDB** is used as the database.
+
+You can access the repository of the border part in this link https://github.com/thegrootteam/front_alfa
 
 ## Technologies Used
 
@@ -602,6 +628,17 @@ Before starting, make sure you have the following software installed in your dev
 - [npm](https://www.npmjs.com/) (v6.0.0 or higher)
 - [MongoDB](https://www.mongodb.com/try/download/community)
 
+### Variables de entorno
+
+- MONGO_URI=mongodb://127.0.0.1:27017/Ejemplo
+- API_VERSION=version
+- JWT_SECRET=place-here-a-custom-string
+- RESEND_API_KEY=place-here-your-resend-api-key
+- CLIENT_PORT=vite-port
+
+- FILES_PATH=/usr/src/app/public # to use in production
+- FILES_PATH=src/public # to use in development
+
 ## Installation and Setup
 
 To start development on this project, follow the steps below:
@@ -623,6 +660,11 @@ To start development on this project, follow the steps below:
    - `MONGODB_URI`: MongoDB connection URI.
    - `JWT_SECRET`: The secret key for using JWT.
    - `PORT`: The port where the server will run.
+   - `RESEND_API_KEY`: The API key for sending emails
+   - `CLIENT_PORT` : The port where the server will listen
+
+   - `FILES_PATH`: /usr/src/app/public # to use in production
+   - `FILES_PATH`: /src/public # to use in development
 
 4. **Initialize the database**:
    ```bash
