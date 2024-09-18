@@ -7,7 +7,10 @@
     "status": true,
     "numberVacancies": 1,
     "listApplicants": [],
-    "numberApplicants": 1
+    "numberApplicants": 0,
+    "location": "Madrid",
+    "typeJob": "presencial",
+    "internJob": "no renumerado"
   },
   {
     "position": "Puesto Chollazo",
@@ -17,6 +20,61 @@
     "status": true,
     "numberVacancies": 1,
     "listApplicants": [],
-    "numberApplicants": 1
+    "numberApplicants": 1,
+    "location": "Bilbao",
+    "typeJob": "teletrabajo",
+    "internJob": "renumerado"
+  },
+  {
+    "position": "Becario para startup",
+    "publicationDate": "2024-08-03",
+    "description": "Aprende con nosotros",
+    "companyOwner": "665364d8648859c8516c5b32",
+    "status": true,
+    "numberVacancies": 3,
+    "listApplicants": [],
+    "numberApplicants": 0,
+    "location": "Madrid",
+    "typeJob": "hibrido",
+    "internJob": "no renumerado"
+  },
+  {
+    "position": "Puesto aprendiz frontend con React",
+    "publicationDate": "2024-08-01",
+    "description": "Formate como futuro expreto de React",
+    "companyOwner": "665364d8648859c8516c5b32",
+    "status": true,
+    "numberVacancies": 4,
+    "listApplicants": [],
+    "numberApplicants": 3,
+    "location": "Barcelona",
+    "typeJob": "teletrabajo",
+    "internJob": "no renumerado"
+  },
+  {
+    "position": "Becario para backend",
+    "publicationDate": "2024-07-23",
+    "description": "Domina el manejo de las APIs con nosotros en un ambiente familiar.",
+    "companyOwner": "665364d8648859c8516c5b32",
+    "status": true,
+    "numberVacancies": 2,
+    "listApplicants": [],
+    "numberApplicants": 0,
+    "location": "Valencia",
+    "typeJob": "presencial",
+    "internJob": "no renumerado"
+  },
+  {
+    "position": "Puesto de vespa",
+    "publicationDate": "2024-05-09",
+    "description": "Ves-pa aquí, ves-pa allá!!",
+    "companyOwner": "665364d8648859c8516c5b32",
+    "status": true,
+    "numberVacancies": 2,
+    "listApplicants": [],
+    "numberApplicants": 3,
+    "location": "Donostia-S.Sebastián",
+    "typeJob": "hibrido",
+    "internJob": "no renumerado"
   }
 ]

@@ -6,7 +6,11 @@ export const swaggerOptions: SwaggerOptions = {
     info: {
       title: 'Endpoints API Alfa',
       version: '1.0.0',
-      description: 'API Alfa build in NodeJS with Typescript'
+      description: 'API Alfa build in NodeJS with Typescript',
+      contact: {
+        name: 'The Groot Team',
+        email: 'thegrootteam@gmail.com'
+      }
     }
   },
   apis: ['./src/routes/*.ts']

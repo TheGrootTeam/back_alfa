@@ -10,7 +10,7 @@ node_modules
 .gitattributes
 
 # Virtual environment
-.env
+# .env
 .venv/
 venv/
 
@@ -24,6 +24,11 @@ htmlcov/
 .cache
 nosetests.xml
 coverage.xml
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__/
 
 # Distribution / packaging
 env/

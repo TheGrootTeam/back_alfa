@@ -1,30 +1,55 @@
-import User from '../models/User';
+import Applicant from '../models/Applicant';
+import Company from '../models/Company';
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { comparePassword } from '../lib/utils';
+import { IApplicant } from '../interfaces/IApplicant';
+import { ICompany } from '../interfaces/ICompany';
 
 export default class LoginController {
-  // index(_req: Request, res: Response, _next: NextFunction) {
-  //   res.json({ token: 'Token desde LoginController!' });
-  // }
+
   async post(req: Request, res: Response, next: NextFunction) {
     try {
       const { dniCif, password } = req.body;
-      // find user in db
-      const user = await User.findOne({ dniCif: dniCif }).exec();
-      // throw error if don't find the user
-      if (!user || !user.comparePassword(password)) {
-        res.status(401).json({ error: 'Invalid credentials' });
-        return;
+
+      // find user in Applicants and Companies collections
+      //const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in tje test
+      const userApplicant: IApplicant | null = await Applicant.findOne({ dniCif: dniCif });
+      let userCompany: ICompany | null = null;
+      let isCompany = false;
+      if (!userApplicant) {
+        //userCompany = await Company.findOne({ dniCif: dniCif }).exec(); <- The exec make a failure in the test
+        userCompany = await Company.findOne({ dniCif: dniCif });
+        isCompany = true;
+      }
+      const user = userApplicant ? userApplicant : userCompany;
+
+      if (user !== null) {
+        const itsOk: boolean = await comparePassword(password, user.password);
+        // throw error if don't find the user or the passward to be incorrect
+        if (!user || !(itsOk)) {
+          res.status(401).json({ error: 'Invalid credentials' });
+          return;
+        }
       }
 
-      // if user exists and password is correct set a JWT with userID data
-      const tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
-        expiresIn: '2h'
-      });
+      let tokenJWT: string | null = null;
+      if (user !== null) {
+        tokenJWT = await jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
+          expiresIn: '2h'
+        });
+      }
 
-      res.json({ tokenJWT: tokenJWT });
+      if (tokenJWT !== null) {
+        res.json({ tokenJWT: tokenJWT, isCompany:isCompany });
+      }
+      else {
+        res.status(401).json({ error: 'Invalid credentials' });
+      }
+
     } catch (error) {
       next(error);
     }
   }
 }
+
