@@ -10,17 +10,17 @@ const storage: StorageEngine = multer.diskStorage({
   destination: function (req, file, callback) {
     let applicantOrCompany = req.params.applicantOrCompany;
     if (!applicantOrCompany) {
-      applicantOrCompany = req.body.isCompany ? 'company' : 'applicant';
+      applicantOrCompany = req.body.isCompany === 'true' ? 'company' : 'applicant';
     }
     if (applicantOrCompany === 'applicant') {
-      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
-        const storagePath = path.resolve(`${process.env.FILES_PATH}/photo`);
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+        const storagePath = path.resolve('src/public/photo');
         if (!fs.existsSync(storagePath)) {
           fs.mkdirSync(storagePath, { recursive: true });
         }
         callback(null, storagePath);
       } else if (file.mimetype === 'application/pdf') {
-        const storagePath = path.resolve(`${process.env.FILES_PATH}/cv`);
+        const storagePath = path.resolve('src/uploads/cv');
         if (!fs.existsSync(storagePath)) {
           fs.mkdirSync(storagePath, { recursive: true });
         }
@@ -30,7 +30,7 @@ const storage: StorageEngine = multer.diskStorage({
       }
     } else if (applicantOrCompany === 'company') {
       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
-        const storagePath = path.resolve(`${process.env.FILES_PATH}/logo`);
+        const storagePath = path.resolve('src/public/logo');
         if (!fs.existsSync(storagePath)) {
           fs.mkdirSync(storagePath, { recursive: true });
         }
