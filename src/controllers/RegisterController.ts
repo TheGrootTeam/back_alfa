@@ -119,11 +119,11 @@ export default class RegisterController {
 
       const message = (isCompany === 'true')
         ? `
-          <h1>¡Hola, ${name}!😃🤚🏻</h1>
+          <h1>¡Hola, ${name}! 😃🤚🏻</h1>
           <p>Estamos muy emocionados de tenerte a bordo como parte de nuestra red de empresas en InternIT.</p>
           <p>Ahora puedes publicar ofertas de trabajo y encontrar el mejor talento para tu empresa.</p>
           <p>Si tienes alguna duda, no dudes en contactar con nosotros. ¡Estamos aquí para ayudarte a tener éxito!</p>
-          <p>Atentamente,<br/>El equipo de a href="https://internit.tech">InternIT</a></p>
+          <p>Atentamente,<br/>El equipo de <a href="https://internit.tech">InternIT</a></p>
         `
         : `
           <h1>¡Hola, ${name}! 😃🤚🏻</h1>

@@ -70,7 +70,7 @@
 
 ## Descripcion
 
-Este repositorio contiene el código del backend de la aplicacion **InternIT**, una API desarrollada en **Node.js** y **TypeScript** para gestionar la comunicación entre empresas y aplicantes de empleo. Proporciona una serie de endpoints para la autenticación, gestión de perfiles, ofertas de trabajo y paneles informativos. Además, se utiliza **MongoDB** como base de datos.
+Este repositorio contiene el código del backend de la aplicacion **InternIT**, una API desarrollada en **Node.js** y **TypeScript** para gestionar la comunicación entre empresas y aplicantes para puestos de prácticas. Proporciona una serie de endpoints para la autenticación, gestión de perfiles, ofertas de trabajo y paneles informativos. Además, se utiliza **MongoDB** como base de datos.
 
 ## Tecnologías Utilizadas
 
@@ -86,6 +86,7 @@ El backend de esta aplicación está construido con tecnologías modernas que as
 - ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white) **v8.57.0**: Herramienta para la verificación del código, asegurando un código limpio y consistente.
 - ![Prettier](https://img.shields.io/badge/Prettier-1A2C34?style=for-the-badge&logo=prettier&logoColor=F7BA3E) **v3.3.3**: Formateador de código para mantener una consistencia en el estilo de escritura.
 - ![dotenv](https://img.shields.io/badge/dotenv-ECD53F?style=for-the-badge&logoColor=000) **v16.4.5**: Utilizado para cargar variables de entorno desde un archivo `.env` en el proceso de Node.js.
+- ![Resend](https://img.shields.io/badge/Resend-1A2C34?style=for-the-badge&logo=resend&logoColor=F7BA3E): Servicio para gestionar el envío de correos electrónicos en la aplicación.
 - ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white): Tecnología de contenedores utilizada para desplegar la aplicación en distintos entornos.
 
 ## Documentación Técnica
