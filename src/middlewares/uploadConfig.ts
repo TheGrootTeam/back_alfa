@@ -10,7 +10,7 @@ const storage: StorageEngine = multer.diskStorage({
   destination: function (req, file, callback) {
     let applicantOrCompany = req.params.applicantOrCompany;
     if (!applicantOrCompany) {
-      applicantOrCompany = req.body.isCompany === 'true' ? 'company' : 'applicant';
+      applicantOrCompany = !req.body.description ? 'applicant' : 'company';
     }
     if (applicantOrCompany === 'applicant') {
       if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/jpg' || file.mimetype === 'image/png') {
