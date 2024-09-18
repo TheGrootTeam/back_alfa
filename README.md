@@ -76,8 +76,6 @@ Este repositorio contiene el código del backend de la aplicacion **InternIT**, 
 
 Podras acceder al repositorio de la parte de frontend en este enlace https://github.com/TheGrootTeam/front_alfa
 
-You can access the repository of the border part in this link https://github.com/thegrootteam/front_alfa
-
 ## Tecnologías Utilizadas
 
 El backend de esta aplicación está construido con tecnologías modernas que aseguran escalabilidad, seguridad y un desarrollo eficiente. A continuación, se listan las principales tecnologías utilizadas junto con sus versiones:
@@ -592,7 +590,7 @@ ___
 
 This repository contains the backend code for the **InternIT** application, an API developed in **Node.js** and **TypeScript** to manage communication between companies and job applicants. It provides a set of endpoints for authentication, profile management, job offers, and information dashboards. In addition, **MongoDB** is used as the database.
 
-You can access the repository of the border part in this link https://github.com/thegrootteam/front_alfa
+You can access the repository of the frontend part in this link https://github.com/thegrootteam/front_alfa
 
 ## Technologies Used
 
